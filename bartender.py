@@ -176,23 +176,15 @@ class Bartender(MenuDelegate):
 		return False
 
 	def clean(self):
-		waitTime = 20
-		pumpThreads = []
+		pins = []
 
 		for pump in self.pump_configuration.keys():
-			pump_t = threading.Thread(target=self.pour, args=(self.pump_configuration[pump]["pin"], waitTime))
-			pumpThreads.append(pump_t)
+			pins.append(self.pump_configuration[pump]["pin"])
 
-		# start the pump threads
-		for thread in pumpThreads:
-			thread.start()
-
-		# start the progress bar
-		self.progressBar(waitTime)
-
-		# wait for threads to finish
-		for thread in pumpThreads:
-			thread.join()
+		self.startProgressBar(maxTime)
+		GPIO.output(pins, GPIO.HIGH)
+		self.sleepAndProgress(time.time(),20,20)
+		GPIO.output(pins, GPIO.LOW)
 
 		# show the main menu
 		self.menuContext.showMenu()
@@ -256,7 +248,7 @@ class Bartender(MenuDelegate):
 
 		print(pumpTimes)
 
-		self.startProgressBar(maxTime)
+		self.startProgressBar()
 		startTime = time.time()
 		print("starting all")
 		GPIO.output([p[0] for p in pumpTimes], GPIO.HIGH)
