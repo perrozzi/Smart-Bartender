@@ -186,10 +186,6 @@ class Bartender(MenuDelegate):
 		# sleep for a couple seconds to make sure the interrupts don't get triggered
 		time.sleep(2);
 
-		# reenable interrupts
-		# self.startInterrupts()
-		self.running = False
-
 	def displayMenuItem(self, menuItem):
 		print menuItem.name
 		self.led.cls()
@@ -273,11 +269,11 @@ class Bartender(MenuDelegate):
 	def right_btn(self, ctx):
 		print("RIGHT_BTN pressed")
 		if not self.running:
-			print("wasn't running, so am now")
-			self.running = True
+			self.stopInterrupts()
 			self.menuContext.select()
 			print("Finished processing button press")
 		self.running = False
+		self.startInterrupts()
 
 	def run(self):
 		self.startInterrupts()
