@@ -259,7 +259,7 @@ class Bartender(MenuDelegate):
 		self.startProgressBar(maxTime)
 		startTime = time.time()
 		print("starting all")
-		GPIO.output([p[0] for p in pumptimes], GPIO.HIGH)
+		GPIO.output([p[0] for p in pumpTimes], GPIO.HIGH)
 		for p in pumpTimes:
 			pin, delay = p
 			if delay > 0: 
