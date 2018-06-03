@@ -274,6 +274,7 @@ class Bartender(MenuDelegate):
 	def progressBar(self, waitTime):
 		start_time = time.time()
 		self.led.cls()
+		self.led.canvas.text((30,20),"Dispensing...", font=FONT, fill=1)
 		while time.time() - start_time < waitTime:
 			prog = (time.time() - start_time)/waitTime
 			self.updateProgressBar(prog, y=35)
