@@ -197,10 +197,6 @@ class Bartender(MenuDelegate):
 		waitTime = 20
 		pumpThreads = []
 
-		# cancel any button presses while the drink is being made
-		# self.stopInterrupts()
-		self.running = True
-
 		for pump in self.pump_configuration.keys():
 			pump_t = threading.Thread(target=self.pour, args=(self.pump_configuration[pump]["pin"], waitTime))
 			pumpThreads.append(pump_t)
@@ -332,11 +328,18 @@ class Bartender(MenuDelegate):
 
 	def left_btn(self, ctx):
 		if not self.running:
+			self.running = True
 			self.menuContext.advance()
+			print("Finished processing button press")
+			self.running = False
 
 	def right_btn(self, ctx):
+		print("RIGHT_BTN pressed")
 		if not self.running:
+			self.running = True
 			self.menuContext.select()
+			print("Finished processing button press")
+			self.running = False
 
 	def updateProgressBar(self, percent, x=15, y=15):
 		h = 10
@@ -362,6 +365,8 @@ class Bartender(MenuDelegate):
 bartender = Bartender()
 bartender.buildMenu(drink_list, drink_options)
 bartender.run()
+time.sleep(2)
+bartender.right_btn(1)
 
 
 
