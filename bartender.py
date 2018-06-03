@@ -250,7 +250,7 @@ class Bartender(MenuDelegate):
 
 		totalTime = pumpTimes[-1][1]
 
-		pumpTimes.sort(key=lambda:x[1])
+		pumpTimes.sort(key=lambda x: x[1])
 		for i in range(1,len(pumpTimes)):
 			pumpTimes[i][1] -= pumpTimes[i-1][1]
 
@@ -302,7 +302,8 @@ class Bartender(MenuDelegate):
 
 		except KeyboardInterrupt:
 			GPIO.cleanup()       # clean up GPIO on CTRL+C exit
-		GPIO.cleanup()           # clean up GPIO on normal exit
+		finally:
+			GPIO.cleanup()       # clean up GPIO on normal exit
 
 		traceback.print_exc()
 
