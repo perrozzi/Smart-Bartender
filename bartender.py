@@ -204,7 +204,7 @@ class Bartender(MenuDelegate):
 	def startProgressBar(self,x=15,y=20):
 		start_time = time.time()
 		self.led.cls()
-		self.led.canvas.text((30,20),"Dispensing...", font=FONT, fill=1)
+		self.led.canvas.text((10,20),"Dispensing...", font=FONT, fill=1)
 
 	def sleepAndProgress(self, startTime, waitTime, totalTime, x=15, y=35):
 		localStartTime = time.time()
@@ -261,8 +261,6 @@ class Bartender(MenuDelegate):
 		# sleep for a couple seconds to make sure the interrupts don't get triggered
 		time.sleep(2)
 
-		# reenable interrupts
-		self.running = False
 
 	def left_btn(self, ctx):
 		print("LEFT_BTN pressed")
@@ -270,7 +268,7 @@ class Bartender(MenuDelegate):
 			self.running = True
 			self.menuContext.advance()
 			print("Finished processing button press")
-			self.running = False
+		self.running = False
 
 	def right_btn(self, ctx):
 		print("RIGHT_BTN pressed")
@@ -278,7 +276,7 @@ class Bartender(MenuDelegate):
 			self.running = True
 			self.menuContext.select()
 			print("Finished processing button press")
-			self.running = False
+		self.running = False
 
 	def run(self):
 		self.startInterrupts()
