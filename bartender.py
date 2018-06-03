@@ -217,14 +217,12 @@ class Bartender(MenuDelegate):
 		width = self.screen_width-2*x
 		
 		while time.time() - startTime < waitTime:
-			prog = (time.time() - startTime)/totalTime
-			self.updateProgressBar(prog, y=35)
+			progress = (time.time() - startTime)/totalTime
+			p_loc = int(progress*width)
+			self.led.canvas.rectangle((x,y,x+width,y+height), outline=255, fill=0)
+			self.led.canvas.rectangle((x+1,y+1,x+p_loc,y+height-1), outline=255, fill=1)
 			self.led.display()
 			time.sleep(0.2)
-		
-		p_loc = int(progress*width)
-		self.led.canvas.rectangle((x,y,x+width,y+height), outline=255, fill=0)
-		self.led.canvas.rectangle((x+1,y+1,x+p_loc,y+height-1), outline=255, fill=1)
 
 	def makeDrink(self, drink, ingredients):
 		# cancel any button presses while the drink is being made
