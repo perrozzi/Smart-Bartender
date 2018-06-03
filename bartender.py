@@ -63,7 +63,7 @@ class Bartender(MenuDelegate):
 		# Very important... This lets py-gaugette 'know' what pins to use in order to reset the display
 		self.led = ssd1306(I2CBUS) # Change rows & cols values depending on your display dimensions.
 		logo = Image.open('pi_logo.png')
-		draw.bitmap((32, 0), logo, fill=0)
+		self.led.canvas.bitmap((32, 0), logo, fill=0)
 		self.led.display()
 
 		# load the pump configuration from file
@@ -339,15 +339,15 @@ class Bartender(MenuDelegate):
 	def updateProgressBar(self, percent, x=15, y=15):
 		height = 10
 		width = self.screen_width-2*x
-		# for w in range(0, width):
-		# 	self.led.draw_pixel(w + x, y)
-		# 	self.led.draw_pixel(w + x, y + height)
-		# for h in range(0, height):
-		# 	self.led.draw_pixel(x, h + y)
-		# 	self.led.draw_pixel(self.screen_width-x, h + y)
-		# 	for p in range(0, percent):
-		# 		p_loc = int(p/100.0*width)
-		# 		self.led.draw_pixel(x + p_loc, h + y)
+		for w in range(0, width):
+			self.led.draw_pixel(w + x, y)
+			self.led.draw_pixel(w + x, y + height)
+		for h in range(0, height):
+			self.led.draw_pixel(x, h + y)
+			self.led.draw_pixel(self.screen_width-x, h + y)
+			for p in range(0, percent):
+				p_loc = int(p/100.0*width)
+				self.led.draw_pixel(x + p_loc, h + y)
 
 	def run(self):
 		self.startInterrupts()
