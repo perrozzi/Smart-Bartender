@@ -339,9 +339,9 @@ class Bartender(MenuDelegate):
 	def updateProgressBar(self, percent, x=15, y=15):
 		h = 10
 		w = self.screen_width-2*x
-		self.led.rectangle((x,y,x+w,y+h), outline=255, fill=0)
+		self.led.canvas.rectangle((x,y,x+w,y+h), outline=255, fill=0)
 		p_loc = int(p/100.0*width)
-		self.led.rectangle((x+1,y+1,xp_loc,y+h-1), outline=128, fill=1)
+		self.led.canvas.rectangle((x+1,y+1,xp_loc,y+h-1), outline=128, fill=1)
 
 	def run(self):
 		self.startInterrupts()
