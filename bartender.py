@@ -340,7 +340,7 @@ class Bartender(MenuDelegate):
 		h = 10
 		w = self.screen_width-2*x
 		self.led.canvas.rectangle((x,y,x+w,y+h), outline=255, fill=0)
-		p_loc = int(percent/100.0*width)
+		p_loc = int(percent/100.0*w)
 		self.led.canvas.rectangle((x+1,y+1,xp_loc,y+h-1), outline=128, fill=1)
 
 	def run(self):
