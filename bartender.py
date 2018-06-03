@@ -274,7 +274,7 @@ class Bartender(MenuDelegate):
 	def progressBar(self, waitTime):
 		interval = waitTime / 100.0
 		for x in range(1, 101):
-			self.led.clear_display()
+			self.led.cls()
 			self.updateProgressBar(x, y=35)
 			self.led.display()
 			time.sleep(interval)
@@ -337,17 +337,11 @@ class Bartender(MenuDelegate):
 			self.menuContext.select()
 
 	def updateProgressBar(self, percent, x=15, y=15):
-		height = 10
+		h = 10
 		width = self.screen_width-2*x
-		for w in range(0, width):
-			self.led.draw_pixel(w + x, y)
-			self.led.draw_pixel(w + x, y + height)
-		for h in range(0, height):
-			self.led.draw_pixel(x, h + y)
-			self.led.draw_pixel(self.screen_width-x, h + y)
-			for p in range(0, percent):
-				p_loc = int(p/100.0*width)
-				self.led.draw_pixel(x + p_loc, h + y)
+		self.led.rectangle((x,y,x+w,y+h), outline=255, fill=0)
+		p_loc = int(p/100.0*width)
+		self.led.rectangle((x+1,y+1,xp_loc,y+h-1), outline=128, fill=1)
 
 	def run(self):
 		self.startInterrupts()
