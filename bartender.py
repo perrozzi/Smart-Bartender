@@ -182,9 +182,9 @@ class Bartender(MenuDelegate):
 			pins.append(self.pump_configuration[pump]["pin"])
 
 		self.startProgressBar(maxTime)
-		GPIO.output(pins, GPIO.HIGH)
-		self.sleepAndProgress(time.time(),20,20)
 		GPIO.output(pins, GPIO.LOW)
+		self.sleepAndProgress(time.time(),20,20)
+		GPIO.output(pins, GPIO.HIGH)
 
 		# show the main menu
 		self.menuContext.showMenu()
@@ -249,12 +249,12 @@ class Bartender(MenuDelegate):
 		self.startProgressBar()
 		startTime = time.time()
 		print("starting all")
-		GPIO.output([p[0] for p in pumpTimes], GPIO.HIGH)
+		GPIO.output([p[0] for p in pumpTimes], GPIO.LOW)
 		for p in pumpTimes:
 			pin, delay = p
 			if delay > 0: 
 				self.sleepAndProgress(startTime, delay, totalTime)
-			GPIO.output(pin, GPIO.LOW)
+			GPIO.output(pin, GPIO.HIGH)
 			print("stopping {}".format(pin))
 
 		# show the main menu
