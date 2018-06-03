@@ -49,7 +49,7 @@ class Bartender(MenuDelegate):
 
 		self.btn1Pin = LEFT_BTN_PIN
 		self.btn2Pin = RIGHT_BTN_PIN
-	 
+ 
 	 	# configure interrups for buttons
 	 	GPIO.setup(self.btn1Pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 		GPIO.setup(self.btn2Pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)  
@@ -84,7 +84,7 @@ class Bartender(MenuDelegate):
 		# turn everything off
 		for i in range(0, self.numpixels):
 			self.strip.setPixelColor(i, 0)
-		self.strip.show() 
+		self.strip.show()
 
 		print "Done initializing"
 
@@ -156,7 +156,7 @@ class Bartender(MenuDelegate):
 					for p in self.pump_configuration.keys():
 						if (ing == self.pump_configuration[p]["value"]):
 							presentIng += 1
-				if (presentIng == len(ingredients.keys())): 
+				if (presentIng == len(ingredients.keys())):
 					i.visible = True
 			elif (i.type == "menu"):
 				self.filterDrinks(i)
@@ -348,13 +348,13 @@ class Bartender(MenuDelegate):
 	def run(self):
 		self.startInterrupts()
 		# main loop
-		try:  
+		try:
 			while True:
 				time.sleep(0.1)
-		  
-		except KeyboardInterrupt:  
-			GPIO.cleanup()       # clean up GPIO on CTRL+C exit  
-		GPIO.cleanup()           # clean up GPIO on normal exit 
+
+		except KeyboardInterrupt:
+			GPIO.cleanup()       # clean up GPIO on CTRL+C exit
+		GPIO.cleanup()           # clean up GPIO on normal exit
 
 		traceback.print_exc()
 
