@@ -10,7 +10,7 @@ import traceback
 from lib_oled96 import ssd1306
 from smbus import SMBus
 from PIL import ImageFont, ImageDraw, Image
-FONT = ImageFont.load_default()
+FONT = ImageFont.truetype("FreeMono.ttf", 15)
 I2CBUS = SMBus(1)
 
 from dotstar import Adafruit_DotStar
