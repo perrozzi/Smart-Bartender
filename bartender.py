@@ -5,7 +5,6 @@ import time
 import sys
 import RPi.GPIO as GPIO
 import json
-import threading
 import traceback
 
 from lib_oled96 import ssd1306
@@ -297,7 +296,8 @@ class Bartender(MenuDelegate):
 		# main loop
 		try:
 			while True:
-				time.sleep(0.1)
+				raw_input("Press enter to trigger right_btn")
+				bartender.right_btn(1)
 
 		except KeyboardInterrupt:
 			GPIO.cleanup()       # clean up GPIO on CTRL+C exit
@@ -309,8 +309,6 @@ class Bartender(MenuDelegate):
 bartender = Bartender()
 bartender.buildMenu(drink_list, drink_options)
 bartender.run()
-input("Press enter to trigger right_btn")
-bartender.right_btn(1)
 
 
 
