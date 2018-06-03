@@ -273,6 +273,7 @@ class Bartender(MenuDelegate):
 	def right_btn(self, ctx):
 		print("RIGHT_BTN pressed")
 		if not self.running:
+			print("wasn't running, so am now")
 			self.running = True
 			self.menuContext.select()
 			print("Finished processing button press")
