@@ -272,12 +272,13 @@ class Bartender(MenuDelegate):
 		GPIO.output(pin, GPIO.HIGH)
 
 	def progressBar(self, waitTime):
-		interval = waitTime / 100.0
-		for x in range(1, 101):
-			self.led.cls()
-			self.updateProgressBar(x, y=35)
+		start_time = time.time()
+		self.led.cls()
+		while time.time() - start_time < waitTime:
+			prog = (time.time() - start_time)/waitTime
+			self.updateProgressBar(prog, y=35)
 			self.led.display()
-			time.sleep(interval)
+			time.sleep(0.5)
 
 	def makeDrink(self, drink, ingredients):
 		# cancel any button presses while the drink is being made
@@ -339,8 +340,8 @@ class Bartender(MenuDelegate):
 	def updateProgressBar(self, percent, x=15, y=15):
 		h = 10
 		w = self.screen_width-2*x
-		self.led.canvas.rectangle((x,y,x+w,y+h), outline=255, fill=0)
 		p_loc = int(percent/100.0*w)
+		self.led.canvas.rectangle((x,y,x+w,y+h), outline=255, fill=0)
 		self.led.canvas.rectangle((x+1,y+1,x+p_loc,y+h-1), outline=128, fill=1)
 
 	def run(self):
