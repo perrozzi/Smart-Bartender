@@ -32,11 +32,6 @@ RIGHT_PIN_BOUNCE = 2000
 OLED_RESET_PIN = 15
 OLED_DC_PIN = 16
 
-NUMBER_NEOPIXELS = 45
-NEOPIXEL_DATA_PIN = 26
-NEOPIXEL_CLOCK_PIN = 6
-NEOPIXEL_BRIGHTNESS = 64
-
 FLOW_RATE = 60.0/100.0
 
 class Bartender(MenuDelegate): 
@@ -49,9 +44,9 @@ class Bartender(MenuDelegate):
 
 		self.btn1Pin = LEFT_BTN_PIN
 		self.btn2Pin = RIGHT_BTN_PIN
- 
-	 	# configure interrups for buttons
-	 	GPIO.setup(self.btn1Pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+
+		# configure interrups for buttons
+		GPIO.setup(self.btn1Pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 		GPIO.setup(self.btn2Pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)  
 
 		# configure screen
@@ -71,21 +66,6 @@ class Bartender(MenuDelegate):
 		for pump in self.pump_configuration.keys():
 			GPIO.setup(self.pump_configuration[pump]["pin"], GPIO.OUT, initial=GPIO.HIGH)
 
-		# setup pixels:
-		self.numpixels = NUMBER_NEOPIXELS # Number of LEDs in strip
-
-		# Here's how to control the strip from any two GPIO pins:
-		datapin  = NEOPIXEL_DATA_PIN
-		clockpin = NEOPIXEL_CLOCK_PIN
-		self.strip = Adafruit_DotStar(self.numpixels, datapin, clockpin)
-		self.strip.begin()           # Initialize pins for output
-		self.strip.setBrightness(NEOPIXEL_BRIGHTNESS) # Limit brightness to ~1/4 duty cycle
-
-		# turn everything off
-		for i in range(0, self.numpixels):
-			self.strip.setPixelColor(i, 0)
-		self.strip.show()
-
 		print "Done initializing"
 
 	@staticmethod
@@ -98,8 +78,11 @@ class Bartender(MenuDelegate):
 			json.dump(configuration, jsonFile)
 
 	def startInterrupts(self):
+		self.running = True
 		GPIO.add_event_detect(self.btn1Pin, GPIO.FALLING, callback=self.left_btn, bouncetime=LEFT_PIN_BOUNCE)  
-		GPIO.add_event_detect(self.btn2Pin, GPIO.FALLING, callback=self.right_btn, bouncetime=RIGHT_PIN_BOUNCE)  
+		GPIO.add_event_detect(self.btn2Pin, GPIO.FALLING, callback=self.right_btn, bouncetime=RIGHT_PIN_BOUNCE)
+		time.sleep(1)
+		self.running = False
 
 	def stopInterrupts(self):
 		GPIO.remove_event_detect(self.btn1Pin)
@@ -228,105 +211,73 @@ class Bartender(MenuDelegate):
 		self.led.canvas.text((0,20),menuItem.name, font=FONT, fill=1)
 		self.led.display()
 
-	def cycleLights(self):
-		t = threading.currentThread()
-		head  = 0               # Index of first 'on' pixel
-		tail  = -10             # Index of last 'off' pixel
-		color = 0xFF0000        # 'On' color (starts red)
-
-		while getattr(t, "do_run", True):
-			self.strip.setPixelColor(head, color) # Turn on 'head' pixel
-			self.strip.setPixelColor(tail, 0)     # Turn off 'tail'
-			self.strip.show()                     # Refresh strip
-			time.sleep(1.0 / 50)             # Pause 20 milliseconds (~50 fps)
-
-			head += 1                        # Advance head position
-			if(head >= self.numpixels):           # Off end of strip?
-				head    = 0              # Reset to start
-				color >>= 8              # Red->green->blue->black
-				if(color == 0): color = 0xFF0000 # If black, reset to red
-
-			tail += 1                        # Advance tail position
-			if(tail >= self.numpixels): tail = 0  # Off end? Reset
-
-	def lightsEndingSequence(self):
-		# make lights green
-		for i in range(0, self.numpixels):
-			self.strip.setPixelColor(i, 0xFF0000)
-		self.strip.show()
-
-		time.sleep(5)
-
-		# turn lights off
-		for i in range(0, self.numpixels):
-			self.strip.setPixelColor(i, 0)
-		self.strip.show() 
-
 	def pour(self, pin, waitTime):
 		GPIO.output(pin, GPIO.LOW)
 		time.sleep(waitTime)
 		GPIO.output(pin, GPIO.HIGH)
 
-	def progressBar(self, waitTime):
+	def startProgressBar(self,x=15,y=20):
 		start_time = time.time()
 		self.led.cls()
 		self.led.canvas.text((30,20),"Dispensing...", font=FONT, fill=1)
-		while time.time() - start_time < waitTime:
-			prog = (time.time() - start_time)/waitTime
+
+	def sleepAndProgress(self, startTime, waitTime, totalTime, x=15, y=35):
+		height = 10
+		width = self.screen_width-2*x
+		
+		while time.time() - startTime < waitTime:
+			prog = (time.time() - startTime)/totalTime
 			self.updateProgressBar(prog, y=35)
 			self.led.display()
-			time.sleep(0.5)
+			time.sleep(0.2)
+		
+		p_loc = int(progress*width)
+		self.led.canvas.rectangle((x,y,x+width,y+height), outline=255, fill=0)
+		self.led.canvas.rectangle((x+1,y+1,x+p_loc,y+height-1), outline=255, fill=1)
 
 	def makeDrink(self, drink, ingredients):
 		# cancel any button presses while the drink is being made
 		# self.stopInterrupts()
 		self.running = True
 
-		# launch a thread to control lighting
-		lightsThread = threading.Thread(target=self.cycleLights)
-		lightsThread.start()
-
 		# Parse the drink ingredients and spawn threads for pumps
 		maxTime = 0
-		pumpThreads = []
+		pumpTimes = []
 		for ing in ingredients.keys():
 			for pump in self.pump_configuration.keys():
 				if ing == self.pump_configuration[pump]["value"]:
-					waitTime = ingredients[ing] * FLOW_RATE
-					if (waitTime > maxTime):
-						maxTime = waitTime
-					pump_t = threading.Thread(target=self.pour, args=(self.pump_configuration[pump]["pin"], waitTime))
-					pumpThreads.append(pump_t)
+					pumpTimes.append([self.pump_configuration[pump]["pin"], waitTime])
 
-		# start the pump threads
-		for thread in pumpThreads:
-			thread.start()
+		totalTime = pumpTimes[-1][1]
 
-		# start the progress bar
-		self.progressBar(maxTime)
+		pumpTimes.sort(key=lambda:x[1])
+		for i in range(1,len(pumpTimes)):
+			pumpTimes[i][1] -= pumpTimes[i-1][1]
 
-		# wait for threads to finish
-		for thread in pumpThreads:
-			thread.join()
+		print(pumpTimes)
+
+		self.startProgressBar(maxTime)
+		startTime = time.time()
+		print("starting all")
+		GPIO.output([p[0] for p in pumptimes], GPIO.HIGH)
+		for p in pumpTimes:
+			pin, delay = p
+			if delay > 0: 
+				self.sleepAndProgress(startTime, delay, totalTime)
+			GPIO.output(pin, GPIO.LOW)
+			print("stopping {}".format(pin))
 
 		# show the main menu
 		self.menuContext.showMenu()
 
-		# stop the light thread
-		lightsThread.do_run = False
-		lightsThread.join()
-
-		# show the ending sequence lights
-		self.lightsEndingSequence()
-
 		# sleep for a couple seconds to make sure the interrupts don't get triggered
-		time.sleep(2);
+		time.sleep(2)
 
 		# reenable interrupts
-		# self.startInterrupts()
 		self.running = False
 
 	def left_btn(self, ctx):
+		print("LEFT_BTN pressed")
 		if not self.running:
 			self.running = True
 			self.menuContext.advance()
@@ -340,13 +291,6 @@ class Bartender(MenuDelegate):
 			self.menuContext.select()
 			print("Finished processing button press")
 			self.running = False
-
-	def updateProgressBar(self, percent, x=15, y=15):
-		h = 10
-		w = self.screen_width-2*x
-		p_loc = int(percent*w)
-		self.led.canvas.rectangle((x,y,x+w,y+h), outline=255, fill=0)
-		self.led.canvas.rectangle((x+1,y+1,x+p_loc,y+h-1), outline=255, fill=1)
 
 	def run(self):
 		self.startInterrupts()
@@ -365,7 +309,7 @@ class Bartender(MenuDelegate):
 bartender = Bartender()
 bartender.buildMenu(drink_list, drink_options)
 bartender.run()
-time.sleep(2)
+input("Press enter to trigger right_btn")
 bartender.right_btn(1)
 
 
