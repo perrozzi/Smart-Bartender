@@ -245,6 +245,7 @@ class Bartender(MenuDelegate):
 		for ing in ingredients.keys():
 			for pump in self.pump_configuration.keys():
 				if ing == self.pump_configuration[pump]["value"]:
+					waitTime = ingredients[ing] * FLOW_RATE
 					pumpTimes.append([self.pump_configuration[pump]["pin"], waitTime])
 
 		totalTime = pumpTimes[-1][1]
