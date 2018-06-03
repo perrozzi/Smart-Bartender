@@ -48,12 +48,6 @@ class Bartender(MenuDelegate):
 		GPIO.setup(self.btn1Pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 		GPIO.setup(self.btn2Pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)  
 
-		# configure screen
-		spi_bus = 0
-		spi_device = 0
-		gpio = gaugette.gpio.GPIO()
-		spi = gaugette.spi.SPI(spi_bus, spi_device)
-
 		# Very important... This lets py-gaugette 'know' what pins to use in order to reset the display
 		self.led = ssd1306(I2CBUS) # Change rows & cols values depending on your display dimensions.
 		logo = Image.open('pi_logo.png')
@@ -213,10 +207,11 @@ class Bartender(MenuDelegate):
 		self.led.canvas.text((30,20),"Dispensing...", font=FONT, fill=1)
 
 	def sleepAndProgress(self, startTime, waitTime, totalTime, x=15, y=35):
+		localStartTime = time.time()
 		height = 10
 		width = self.screen_width-2*x
 		
-		while time.time() - startTime < waitTime:
+		while time.time() - localStartTime < waitTime:
 			progress = (time.time() - startTime)/totalTime
 			p_loc = int(progress*width)
 			self.led.canvas.rectangle((x,y,x+width,y+height), outline=255, fill=0)
@@ -226,7 +221,6 @@ class Bartender(MenuDelegate):
 
 	def makeDrink(self, drink, ingredients):
 		# cancel any button presses while the drink is being made
-		# self.stopInterrupts()
 		self.running = True
 
 		# Parse the drink ingredients and spawn threads for pumps
@@ -238,9 +232,13 @@ class Bartender(MenuDelegate):
 					waitTime = ingredients[ing] * FLOW_RATE
 					pumpTimes.append([self.pump_configuration[pump]["pin"], waitTime])
 
+		# Put the drinkjs in the order they'll stop pouring
+		pumpTimes.sort(key=lambda x: x[1])
+
+		# Note the total time required to pour the drink
 		totalTime = pumpTimes[-1][1]
 
-		pumpTimes.sort(key=lambda x: x[1])
+		# Change the times to be relative to the previous not absolute
 		for i in range(1,len(pumpTimes)):
 			pumpTimes[i][1] -= pumpTimes[i-1][1]
 
