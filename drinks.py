@@ -60,7 +60,6 @@ drink_options = [
 	{"name": "Margarita Mix", "value": "mmix"},
 	{"name": "Cranberry Juice", "value": "cj"},
 	{"name": "Pineapple Juice", "value": "pj"},
-	{"name": "Pineapple Juice", "value": "pj"},
 	{"name": "Apple Juice", "value": "aj"},
 	{"name": "Lime Juice", "value": "lij"},
 	{"name": "Lemon Juice", "value": "lej"},
