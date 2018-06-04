@@ -3,6 +3,8 @@ Cutting the threading and neo-pixel, and using an I2C OLED display to make this 
 
 **Requires [This OLED screen library](https://github.com/BLavery/lib_oled96) by [BLavery](https://github.com/BLavery)**
 
+* ---=== All text below this is from the original repo creator ===--- *
+
 ## Prerequisites for the Raspberry Pi
 Make sure you can connect a screen and keyboard to your Raspberry Pi. I like to use VNC to connect to the Pi. I created a [tutorial](https://www.youtube.com/watch?v=2iVK8dn-6x4) about how to set that up on a Mac.
 
