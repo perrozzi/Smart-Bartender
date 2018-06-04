@@ -212,7 +212,10 @@ class Bartender(MenuDelegate):
 			p_loc = int(progress*width)
 			self.led.canvas.rectangle((x,y,x+width,y+height), outline=255, fill=0)
 			self.led.canvas.rectangle((x+1,y+1,x+p_loc,y+height-1), outline=255, fill=1)
-			self.led.display()
+			try:
+				self.led.display()
+			except IOError:
+				print("Failed to talk to screen")
 			time.sleep(0.2)
 
 	def makeDrink(self, drink, ingredients):
