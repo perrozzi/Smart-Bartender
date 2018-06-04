@@ -57,5 +57,16 @@ drink_options = [
 	{"name": "Tonic Water", "value": "tonic"},
 	{"name": "Coke", "value": "coke"},
 	{"name": "Orange Juice", "value": "oj"},
-	{"name": "Margarita Mix", "value": "mmix"}
+	{"name": "Margarita Mix", "value": "mmix"},
+	{"name": "Cranberry Juice", "value": "cj"},
+	{"name": "Pineapple Juice", "value": "pj"},
+	{"name": "Pineapple Juice", "value": "pj"},
+	{"name": "Apple Juice", "value": "aj"},
+	{"name": "Lime Juice", "value": "lij"},
+	{"name": "Lemon Juice", "value": "lej"},
+	{"name": "Whisky", "value": "whisky"},
+	{"name": "Triple Sec", "value": "tripSec"},
+	{"name": "Grenadine", "value": "grenadine"},
+	{"name": "Vermouth" ,"value":"vermouth"},
+	{"name": "Soda", "value": "soda"},
 ]
