@@ -175,7 +175,7 @@ class Bartender(MenuDelegate):
 		for pump in self.pump_configuration.keys():
 			pins.append(self.pump_configuration[pump]["pin"])
 
-		self.startProgressBar(maxTime)
+		self.startProgressBar()
 		GPIO.output(pins, GPIO.LOW)
 		self.sleepAndProgress(time.time(),20,20)
 		GPIO.output(pins, GPIO.HIGH)
