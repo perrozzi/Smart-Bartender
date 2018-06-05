@@ -417,7 +417,7 @@ drink_list = [{
 		}
 	}, {
 
-		"name": "Lemon Drop (Small)",
+		"name": "Lemon Drop",
 		"ingredients": {
 
 			"vodka": 40,
