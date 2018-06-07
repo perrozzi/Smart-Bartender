@@ -26,7 +26,7 @@ LEFT_BTN_PIN = 13
 LEFT_PIN_BOUNCE = 200
 
 RIGHT_BTN_PIN = 5
-RIGHT_PIN_BOUNCE = 2000
+RIGHT_PIN_BOUNCE = 600
 
 OLED_RESET_PIN = 15
 OLED_DC_PIN = 16
@@ -206,7 +206,7 @@ class Bartender(MenuDelegate):
 		localStartTime = time.time()
 		height = 10
 		width = self.screen_width-2*x
-		
+
 		while time.time() - localStartTime < waitTime:
 			progress = (time.time() - startTime)/totalTime
 			p_loc = int(progress*width)
@@ -222,8 +222,7 @@ class Bartender(MenuDelegate):
 		# cancel any button presses while the drink is being made
 		self.running = True
 
-		# Parse the drink ingredients and spawn threads for pumps
-		maxTime = 0
+		# Parse the drink ingredients and create pouring data
 		pumpTimes = []
 		for ing in ingredients.keys():
 			for pump in self.pump_configuration.keys():
@@ -282,9 +281,16 @@ class Bartender(MenuDelegate):
 		self.startInterrupts()
 		# main loop
 		try:
-			while True:
-				raw_input("Press enter to trigger right_btn")
-				bartender.right_btn(1)
+			try:
+				while True:
+					letter = raw_input(">")
+					if letter == "l":
+						self.left_btn(False)
+					if letter == "r":
+						self.right_btn(False)
+			except EOFError:
+				while True:
+					time.sleep(0.1)
 
 		except KeyboardInterrupt:
 			GPIO.cleanup()       # clean up GPIO on CTRL+C exit
