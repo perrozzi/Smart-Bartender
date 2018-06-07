@@ -77,10 +77,6 @@ class Bartender(MenuDelegate):
 		time.sleep(1)
 		self.running = False
 
-	def stopInterrupts(self):
-		GPIO.remove_event_detect(self.btn1Pin)
-		GPIO.remove_event_detect(self.btn2Pin)
-
 	def buildMenu(self, drink_list, drink_options):
 		# create a new main menu
 		m = Menu("Main Menu")
@@ -271,11 +267,10 @@ class Bartender(MenuDelegate):
 	def right_btn(self, ctx):
 		print("RIGHT_BTN pressed")
 		if not self.running:
-			self.stopInterrupts()
+			self.running = True
 			self.menuContext.select()
 			print("Finished processing button press")
-		self.running = False
-		self.startInterrupts()
+			self.running = False
 
 	def run(self):
 		self.startInterrupts()
