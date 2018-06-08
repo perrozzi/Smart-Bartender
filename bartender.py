@@ -270,7 +270,8 @@ class Bartender(MenuDelegate):
 			self.running = True
 			self.menuContext.select()
 			print("Finished processing button press")
-			self.running = False
+			self.running = 2
+			print("Starting button timeout")
 
 	def run(self):
 		self.startInterrupts()
@@ -286,6 +287,11 @@ class Bartender(MenuDelegate):
 			except EOFError:
 				while True:
 					time.sleep(0.1)
+					if self.running not in (True,False):
+						self.running -= 0.1
+						if self.running == 0:
+							self.running = False
+							print("Finished button timeout")
 
 		except KeyboardInterrupt:
 			GPIO.cleanup()       # clean up GPIO on CTRL+C exit
