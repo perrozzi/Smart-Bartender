@@ -7,24 +7,18 @@ import RPi.GPIO as GPIO
 import json
 import threading
 import traceback
+import os
 
 from dotstar import Adafruit_DotStar
 from menu import MenuItem, Menu, Back, MenuContext, MenuDelegate
-from drinks import drink_list, drink_options
 
 GPIO.setmode(GPIO.BCM)
 
-SCREEN_WIDTH = 128
-SCREEN_HEIGHT = 64
+SCREEN_WIDTH = 320
+SCREEN_HEIGHT = 240
 
-LEFT_BTN_PIN = 13
-LEFT_PIN_BOUNCE = 1000
-
-RIGHT_BTN_PIN = 5
-RIGHT_PIN_BOUNCE = 2000
-
-OLED_RESET_PIN = 15
-OLED_DC_PIN = 16
+OLED_RESET_PIN = 24
+OLED_DC_PIN = 22
 
 NUMBER_NEOPIXELS = 45
 NEOPIXEL_DATA_PIN = 26
@@ -40,13 +34,12 @@ class Bartender(MenuDelegate):
 		# set the oled screen height
 		self.screen_width = SCREEN_WIDTH
 		self.screen_height = SCREEN_HEIGHT
-
-		self.btn1Pin = LEFT_BTN_PIN
-		self.btn2Pin = RIGHT_BTN_PIN
 	 
 	 	# configure interrups for buttons
-	 	GPIO.setup(self.btn1Pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-		GPIO.setup(self.btn2Pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)  
+	 	GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+		GPIO.setup(22, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+		GPIO.setup(23, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+		GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
 		# configure screen
 		spi_bus = 0
@@ -55,7 +48,8 @@ class Bartender(MenuDelegate):
 		spi = gaugette.spi.SPI(spi_bus, spi_device)
 
 		# Very important... This lets py-gaugette 'know' what pins to use in order to reset the display
-		self.led = gaugette.ssd1306.SSD1306(gpio, spi, reset_pin=OLED_RESET_PIN, dc_pin=OLED_DC_PIN, rows=self.screen_height, cols=self.screen_width) # Change rows & cols values depending on your display dimensions.
+		# Change rows & cols values depending on your display dimensions.
+		self.led = gaugette.ssd1306.SSD1306(gpio, spi, reset_pin=OLED_RESET_PIN, dc_pin=OLED_DC_PIN, rows=self.screen_height, cols=self.screen_width)
 		self.led.begin()
 		self.led.clear_display()
 		self.led.display()
@@ -69,8 +63,12 @@ class Bartender(MenuDelegate):
 		for pump in self.pump_configuration.keys():
 			GPIO.setup(self.pump_configuration[pump]["pin"], GPIO.OUT, initial=GPIO.HIGH)
 
+		# load the drink and ingredient configurations
+		self.drink_list = Bartender.readDrinkList()
+		self.drink_options = Bartender.readDrinkOptions()
+
 		# setup pixels:
-		self.numpixels = NUMBER_NEOPIXELS # Number of LEDs in strip
+		self.numpixels = NUMBER_NEOPIXELS
 
 		# Here's how to control the strip from any two GPIO pins:
 		datapin  = NEOPIXEL_DATA_PIN
@@ -91,25 +89,37 @@ class Bartender(MenuDelegate):
 		return json.load(open('pump_config.json'))
 
 	@staticmethod
+	def readDrinkList():
+		return json.load(open('drink_list.json'))
+
+	@staticmethod
+	def readDrinkOptions():
+		return json.load(open('drink_options.json'))
+
+	@staticmethod
 	def writePumpConfiguration(configuration):
 		with open("pump_config.json", "w") as jsonFile:
 			json.dump(configuration, jsonFile)
 
 	def startInterrupts(self):
-		GPIO.add_event_detect(self.btn1Pin, GPIO.FALLING, callback=self.left_btn, bouncetime=LEFT_PIN_BOUNCE)  
-		GPIO.add_event_detect(self.btn2Pin, GPIO.FALLING, callback=self.right_btn, bouncetime=RIGHT_PIN_BOUNCE)  
+		GPIO.add_event_detect(17, GPIO.FALLING, callback=self.btn1, bouncetime=1000)
+		GPIO.add_event_detect(22, GPIO.FALLING, callback=self.btn2, bouncetime=1000)
+		GPIO.add_event_detect(23, GPIO.FALLING, callback=self.btn3, bouncetime=1000)
+		GPIO.add_event_detect(27, GPIO.FALLING, callback=self.btn4, bouncetime=1000)
 
 	def stopInterrupts(self):
-		GPIO.remove_event_detect(self.btn1Pin)
-		GPIO.remove_event_detect(self.btn2Pin)
+		GPIO.remove_event_detect(self.17)
+		GPIO.remove_event_detect(self.22)
+		GPIO.remove_event_detect(self.23)
+		GPIO.remove_event_detect(self.27)
 
-	def buildMenu(self, drink_list, drink_options):
+	def buildMenu(self):
 		# create a new main menu
 		m = Menu("Main Menu")
 
 		# add drink options
 		drink_opts = []
-		for d in drink_list:
+		for d in self.drink_list.keys:
 			drink_opts.append(MenuItem('drink', d["name"], {"ingredients": d["ingredients"]}))
 
 		configuration_menu = Menu("Configure")
@@ -119,7 +129,7 @@ class Bartender(MenuDelegate):
 		for p in sorted(self.pump_configuration.keys()):
 			config = Menu(self.pump_configuration[p]["name"])
 			# add fluid options for each pump
-			for opt in drink_options:
+			for opt in self.drink_options.keys:
 				# star the selected option
 				selected = "*" if opt["value"] == self.pump_configuration[p]["value"] else ""
 				config.addOption(MenuItem('pump_selection', opt["name"], {"key": p, "value": opt["value"], "name": opt["name"]}))
@@ -326,13 +336,71 @@ class Bartender(MenuDelegate):
 		# self.startInterrupts()
 		self.running = False
 
-	def left_btn(self, ctx):
+	def btn1(self, ctx):
 		if not self.running:
-			self.menuContext.advance()
+			global btn1Time
+   			start_time = time.time()
 
-	def right_btn(self, ctx):
+			while GPIO.input(ctx) == 0: # Wait for the button up
+				pass
+
+			btn1Time = time.time() - start_time    # How long was the button down?
+
+			if btn1Time >= .1:
+				# short press
+				self.menuContext.prev()
+			if btn1Time >= 3:
+				# long press
+
+	def btn2(self, ctx):
 		if not self.running:
-			self.menuContext.select()
+			global btn2Time
+   			start_time = time.time()
+
+			while GPIO.input(ctx) == 0: # Wait for the button up
+				pass
+
+			btn2Time = time.time() - start_time    # How long was the button down?
+
+			if btn2Time >= .1:
+				# short press
+				self.menuContext.select()
+			if btn2Time >= 3:
+				# long press
+
+	def btn3(self, ctx):
+		if not self.running:
+			global btn3Time
+   			start_time = time.time()
+
+			while GPIO.input(ctx) == 0: # Wait for the button up
+				pass
+
+			btn3Time = time.time() - start_time    # How long was the button down?
+
+			if btn3Time >= .1:
+				# short press
+				self.menuContext.next()
+			if btn3Time >= 3:
+				# long press
+
+	def btn4(self, ctx):
+		if not self.running:
+			global btn4Time
+   			start_time = time.time()
+
+			while GPIO.input(ctx) == 0: # Wait for the button up
+				pass
+
+			btn4Time = time.time() - start_time    # How long was the button down?
+
+			if btn4Time >= .1:
+				# short press
+				self.menuContext.back()
+			if btn4Time >= 3:
+				# long press
+				os.system("sudo shutdown -h now")
+
 
 	def updateProgressBar(self, percent, x=15, y=15):
 		height = 10
@@ -362,9 +430,5 @@ class Bartender(MenuDelegate):
 
 
 bartender = Bartender()
-bartender.buildMenu(drink_list, drink_options)
+bartender.buildMenu()
 bartender.run()
-
-
-
-

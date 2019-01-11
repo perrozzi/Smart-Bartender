@@ -1,0 +1,451 @@
+// abv: in percent, used to estimate the final cocktail ABV
+// description: whatever you want to show on screen if the ingredient is dived into
+// similar: interchangeable ingredient (if recipe calls for "white rum" and "rum" in configured, the drink will still be made)
+// related: non-interchangeable but related ingredient (if recipe calls specifically for "white rum" then "dark rum" shouldn't be used without prompting)
+// type: spirit, mixer, flavor, garnish - the icon that will appear next to the ingredient in the list
+// value: the value that will be written to the pump_config file - no spaces allowed
+
+{
+	"Bitters": {
+		"abv": "45",
+		"description": "",
+		"similar": "BittersAromatic",
+		"similar": "BittersChocolate",
+		"similar": "BittersOrange",
+		"type": "flavor",
+		"value": "Bitters"
+	},
+	"Aromatic Bitters": {
+		"abv": "45",
+		"description": "",
+		"related": "Bitters",
+		"type": "flavor",
+		"value": "BittersAromatic"
+	},
+	"Campari Bitters": {
+		"abv": "28",
+		"description": "Campari is an alcoholic liqueur, considered an apéritif, obtained from the infusion of herbs and fruit in alcohol and water. It is a bitters, characterized by its dark red color.",
+		"related": "Bitters",
+		"type": "flavor",
+		"value": "BittersCampari"
+	},
+	"Chocolate Bitters": {
+		"abv": "45",
+		"description": "",
+		"related": "Bitters",
+		"type": "flavor",
+		"value": "BittersChocolate"
+	},
+	"Orange Bitters": {
+		"abv": "45",
+		"description": "",
+		"related": "Bitters",
+		"type": "flavor",
+		"value": "BittersOrange"
+	},
+	"Brandy": {
+		"abv": "40",
+		"description": "",
+		"similar": "BrandyApple",
+		"similar": "BrandyApricot",
+		"similar": "BrandyCherry",
+		"similar": "BrandyCognac",
+		"type": "spirit",
+		"value": "Brandy"
+	},
+	"Apple Brandy": {
+		"abv": "40",
+		"description": "",
+		"related": "Brandy",
+		"type": "spirit",
+		"value": "BrandyApple"
+	},
+	"Apricot Brandy": {
+		"abv": "20",
+		"description": "",
+		"related": "Brandy",
+		"type": "spirit",
+		"value": "BrandyApricot"
+	},
+	"Cherry Brandy": {
+		"abv": "20",
+		"description": "",
+		"related": "Brandy",
+		"type": "spirit",
+		"value": "BrandyCherry"
+	},
+	"Cognac Brandy": {
+		"abv": "20",
+		"description": "",
+		"similar": "Brandy",
+		"type": "spirit",
+		"value": "BrandyCognac"
+	},
+	"Pisco Brandy": {
+		"abv": "20",
+		"description": "",
+		"related": "Brandy",
+		"type": "spirit",
+		"value": "BrandyPisco"
+	},
+	"Gin": { 
+		"abv": "40",
+		"description": "",
+		"similar": "GinDry",
+		"similar": "GinOldTom",
+		"type": "spirit",
+		"value": "Gin"
+	},
+	"London Dry Gin": { 
+		"abv": "40",
+		"description": "",
+		"related": "Gin",
+		"type": "spirit",
+		"value": "GinDry"
+	},
+	"Old Tom Gin": { 
+		"abv": "40",
+		"description": "",
+		"related": "Gin",
+		"type": "spirit",
+		"value": "GinOldTom"
+	},
+	"Orange Juice": {
+		"abv": "0",
+		"description": "",
+		"type": "mixer",
+		"value": "JuiceOrange"
+	},
+	"Cranberry Juice": {
+		"abv": "0",
+		"description": "",
+		"type": "mixer",
+		"value": "JuiceCranberry"
+	},
+	"Pineapple Juice": {
+		"abv": "0",
+		"description": "",
+		"type": "mixer",
+		"value": "JuicePineapple"
+	},
+	"Apple Juice": {
+		"abv": "0",
+		"description": "",
+		"type": "mixer",
+		"value": "JuiceApple"
+	},
+	"Grapefruit Juice": {
+		"abv": "0",
+		"description": "",
+		"type": "mixer",
+		"value": "JuiceGrapefruit"
+	},
+	"Tomato Juice": {
+		"abv": "0",
+		"description": "",
+		"type": "mixer",
+		"value": "JuiceTomato"
+	},
+	"Lime Juice": {
+		"abv": "0",
+		"description": "",
+		"type": "mixer",
+		"value": "JuiceLime"
+	},
+	"Lemon Juice": {
+		"abv": "0",
+		"description": "",
+		"type": "mixer",
+		"value": "JuiceLemon"
+	},
+	"Almond Liqueur (Amaretto)": {
+		"abv": "28",
+		"description": "Amaretto (Italian for "a little bitter") is a sweet Italian liqueur that originated in Saronno, Italy. While originally flavored from bitter almonds, various modern commercial brands are prepared from a base of apricot stones, peach stones, or almonds, all of which are natural sources of the benzaldehyde that provides the principal almond-like flavor of the liqueur.",
+		"type": "spirit",
+		"value": "LiqueurAlmond"
+	}
+	"Chocolate Liqueur (Crème de Cacao)": {
+		"abv": "20",
+		"description": "Crème de Cacao is a sweet alcoholic (chocolate bean) flavored liqueur, often scented with a hint of vanilla. It is similar to chocolate liqueur, which is usually sweeter and more syrupy.",
+		"type": "spirit",
+		"value": "LiqueurChocolate"
+	}
+	"Coffee Liqueur (Kahlua)": {
+		"abv": "20",
+		"description": "",
+		"type": "spirit",
+		"value": "LiqueurCoffee"
+	}
+	"Cream Liqueur (Bailey's Irish)": {
+		"abv": "17",
+		"description": "Baileys Irish Cream is an Irish whiskey and cream-based liqueur, made by Diageo at Nangor Road, in Dublin, Ireland.",
+		"type": "spirit",
+		"value": "LiqueurCream"
+	}
+	"Melon Liqueur (Midori)": {
+		"abv": "20",
+		"description": "Midori is a melon-flavored liqueur that has a beautiful green color and is used in many popular cocktails that are easy and fun to mix up.",
+		"type": "spirit",
+		"value": "LiqueurMelon"
+	},
+	"Orange Liqueur (Triple Sec / Cointreau)" {
+		"abv": "40",
+		"description": "",
+		"type": "spirit",
+		"value": "LiqueurOrange"
+	},
+	"Orange Liqueur (Curaçao / Grand Marnier)" {
+		"abv": "40",
+		"description": "",
+		"type": "spirit",
+		"value": "LiqueurOrange"
+	},
+	"Milk": {
+		"abv": "0",
+		"description": "",
+		"type": "mixer",
+		"value": "Milk"
+	},
+	"Coconut Milk": {
+		"abv": "0",
+		"description": "",
+		"type": "mixer",
+		"value": "MilkCoconut"
+	},
+	"Rum": {
+		"abv": "40",
+		"description": "",
+		"similar": "RumWhite",
+		"similar": "RumDark",
+		"type": "spirit",
+		"value": "Rum"
+	},
+	"Coconut Rum": {
+		"abv": "21",
+		"description": "",
+		"related": "Rum",
+		"type": "spirit",
+		"value": "RumCoconut"
+	},
+	"Dark Rum": {
+		"abv": "40",
+		"description": "",
+		"related": "RumWhite",
+		"similar": "Rum",
+		"type": "spirit",
+		"value": "RumDark",
+	},
+	"White Rum": { 
+		"abv": "40",
+		"description": "",
+		"related": "RumDark",
+		"similar": "Rum",
+		"type": "spirit",
+		"value": "RumWhite"
+	},
+	"Peach Schnapps": {
+		"abv": "20",
+		"description": "",
+		"type": "spirit",
+		"value": "SchnappsPeach"
+	},
+	"Peppermint Schnapps": {
+		"abv": "20",
+		"description": "",
+		"type": "spirit",
+		"value": "SchnappsPeppermint"
+	},
+	"Cola": {
+		"abv": "0",
+		"description": "",
+		"type": "mixer",
+		"value": "SodaCola"
+	},
+	"Ginger Beer": {
+		"abv": "0",
+		"description": "",
+		"type": "mixer",
+		"value": "SodaGinger"
+	},
+	"Tonic Water": {
+		"abv": "0",
+		"description": "",
+		"related": "SodaWater",
+		"type": "mixer",
+		"value": "SodaTonic"
+	},
+	"Soda Water": {
+		"abv": "0",
+		"description": "",
+		"related": "SodaTonic",
+		"related": "SodaGinger",
+		"type": "mixer",
+		"value": "SodaWater"
+	},
+	"Grenadine": {
+		"abv": "0",
+		"description": "",
+		"type": "mixer",
+		"value": "SyrupGrenadine"
+	},
+	"Simple Syrup": {
+		"abv": "0",
+		"description": "",
+		"type": "mixer",
+		"value": "SyrupSimple"
+	},
+	"Tequila": {
+		"abv": "40",
+		"description": "",
+		"similar": "TequilaBlanco",
+		"similar": "TequilaAged",
+		"type": "spirit",
+		"value": "Tequila"
+	},
+	"Tequila Blanco": {
+		"abv": "40",
+		"description": "",
+		"related": "Tequila",
+		"type": "spirit",
+		"value": "TequilaBlanco"
+	},
+	"Aged Tequila (Reposado/Añejo)": {
+		"abv": "40",
+		"description": "",
+		"related": "Tequila",
+		"type": "spirit",
+		"value": "TequilaAged"
+	},
+	"Dry Vermouth": {
+		"abv": "18",
+		"description": "",
+		"related": "VermouthSweet",
+		"type": "spirit",
+		"value": "VermouthDry"
+	},
+	"Sweet Vermouth": {
+		"abv": "18",
+		"description": "",
+		"related": "VermouthDry",
+		"type": "spirit",
+		"value": "VermouthSweet"
+	},
+	"Vodka": {
+		"abv": "40",
+		"description": "",
+		"related": "VodkaBlueberry",
+		"related": "VodkaCitrus",
+		"related": "VodkaCucumber",
+		"related": "VodkaRaspberry",
+		"related": "VodkaVanilla",
+		"type": "spirit",
+		"value": "Vodka"
+	},
+	"Blueberry Vodka": {
+		"abv": "40",
+		"description": "",
+		"related": "Vodka",
+		"type": "spirit",
+		"value": "VodkaBlueberry"
+	},
+	"Citrus Vodka": {
+		"abv": "40",
+		"description": "",
+		"related": "Vodka",
+		"type": "spirit",
+		"value": "VodkaCitrus"
+	},
+	"Cucumber Vodka": {
+		"abv": "40",
+		"description": "",
+		"related": "Vodka",
+		"type": "spirit",
+		"value": "VodkaCucumber"
+	},
+	"Raspberry Vodka": {
+		"abv": "40",
+		"description": "",
+		"related": "Vodka",
+		"type": "spirit",
+		"value": "VodkaRaspberry"
+	},
+	"Vanilla Vodka": {
+		"abv": "40",
+		"description": "",
+		"related": "Vodka",
+		"type": "spirit",
+		"value": "VodkaVanilla"
+	},
+	"Water": {
+		"abv": "0",
+		"description": "",
+		"type": "mixer",
+		"value": "Water"
+	},
+	"Whiskey": {
+		"abv": "40",
+		"description": "",
+		"similar": "WhiskeyBourbon",
+		"similar": "WhiskeyRye",
+		"related": "WhiskeyScotch",
+		"related": "WhiskeyScotchIslay",
+		"type": "spirit",
+		"value": "Whiskey"
+	},
+	"Bourbon Whiskey": {
+		"abv": "40",
+		"description": "",
+		"related": "Whiskey",
+		"type": "spirit",
+		"value": "WhiskeyBourbon"
+	},
+	"Rye Whiskey": {
+		"abv": "40",
+		"description": "",
+		"related": "Whiskey",
+		"type": "spirit",
+		"value": "WhiskeyRye"
+	},
+	"Scotch Whiskey": {
+		"abv": "40",
+		"description": "",
+		"related": "Whiskey",
+		"type": "spirit",
+		"value": "WhiskeyScotch"
+	},
+	"Islay Scotch Whiskey": {
+		"abv": "40",
+		"description": "",
+		"related": "Scotch",
+		"type": "spirit",
+		"value": "WhiskeyScotchIslay"
+	},
+	"Fortified Wine (Port)": {
+		"abv": "16",
+		"description": "",
+		"related": "WineRed",
+		"type": "spirit",
+		"value": "WineFortified"
+	},
+	"Red Wine": {
+		"abv": "16",
+		"description": "",
+		"related": "WineWhite",
+		"type": "spirit",
+		"value": "WineRed"
+	},
+	"Sparkling Wine (Prosecco/Champagne)": {
+		"abv": "12",
+		"description": "",
+		"related": "WineWhite",
+		"type": "spirit",
+		"value": "WineSparkling"
+	},
+	"White Wine": {
+		"abv": "16",
+		"description": "",
+		"related": "WineRed",
+		"type": "spirit",
+		"value": "WineWhite"
+	},
+}

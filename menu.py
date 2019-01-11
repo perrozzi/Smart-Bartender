@@ -31,6 +31,9 @@ class Menu(MenuItem):
 	def nextSelection(self):
 		self.selectedOption = (self.selectedOption + 1) % len(self.options)
 
+	def prevSelection(self):
+		self.selectedOption = (self.selectedOption - 1) % len(self.options)
+
 	def getSelection(self):
 		return self.options[self.selectedOption]
 
@@ -70,7 +73,7 @@ class MenuContext(object):
 		else:
 			self.delegate.displayMenuItem(menuItem)
 
-	def advance(self):
+	def next(self):
 		"""
 		Advances the displayed menu to the next visible option
 
@@ -78,6 +81,20 @@ class MenuContext(object):
 		"""
 		for i in self.currentMenu.options:
 			self.currentMenu.nextSelection()
+			selection = self.currentMenu.getSelection()
+			if (selection.visible): 
+				self.display(selection)
+				return
+		raise ValueError("At least one option in a menu must be visible!")
+
+	def prev(self):
+		"""
+		Moves the displayed menu back to the previous visible option
+
+		raises ValueError if all options are visible==False
+		"""
+		for i in self.currentMenu.options:
+			self.currentMenu.prevSelection()
 			selection = self.currentMenu.getSelection()
 			if (selection.visible): 
 				self.display(selection)
