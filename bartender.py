@@ -108,10 +108,10 @@ class Bartender(MenuDelegate):
 		GPIO.add_event_detect(27, GPIO.FALLING, callback=self.btn4, bouncetime=1000)
 
 	def stopInterrupts(self):
-		GPIO.remove_event_detect(self.17)
-		GPIO.remove_event_detect(self.22)
-		GPIO.remove_event_detect(self.23)
-		GPIO.remove_event_detect(self.27)
+		GPIO.remove_event_detect(17)
+		GPIO.remove_event_detect(22)
+		GPIO.remove_event_detect(23)
+		GPIO.remove_event_detect(27)
 
 	def buildMenu(self):
 		# create a new main menu
