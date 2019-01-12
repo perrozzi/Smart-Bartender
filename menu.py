@@ -69,7 +69,7 @@ class MenuContext(object):
 		"""
 		self.delegate.prepareForRender(self.topLevelMenu)
 		if (not menuItem.visible):
-			self.advance()
+			self.next()
 		else:
 			self.delegate.displayMenuItem(menuItem)
 

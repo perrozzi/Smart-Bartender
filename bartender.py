@@ -6,8 +6,9 @@ import threading
 import traceback
 import os
 import pygame
-
 from menu import MenuItem, Menu, Back, MenuContext, MenuDelegate
+
+pygame.init()
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
@@ -27,14 +28,12 @@ NEOPIXEL_CLOCK_PIN = 6
 NEOPIXEL_BRIGHTNESS = 64
 
 FLOW_RATE = 60.0/100.0
+GAME_FONT = pygame.font.Font("FreeMono.ttf", 24)
+MAIN_COLOR = (255, 255, 255)
 
 class Bartender(MenuDelegate): 
     def __init__(self):
         self.running = False
-
-        # set the oled screen height
-        self.screen_width = SCREEN_WIDTH
-        self.screen_height = SCREEN_HEIGHT
      
         # configure interrups for buttons
         GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
@@ -43,7 +42,7 @@ class Bartender(MenuDelegate):
         GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
         # configure screen
-        self.lcd = pygame.display.set_mode((320, 240))
+        self.lcd = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
         self.lcd.fill((255,255,255))
         pygame.display.update()
         self.lcd.fill((0,0,0))
@@ -124,7 +123,7 @@ class Bartender(MenuDelegate):
             for opt in self.drink_options.keys():
                 # star the selected option
                 selected = "*" if self.drink_options[opt] == self.pump_configuration[p]["value"] else ""
-                config.addOption(MenuItem('pump_selection', self.drink_options[opt]["name"], {"key": p, "value": opt, "name": self.drink_options[opt]["name"]}))
+                config.addOption(MenuItem('pump_selection', self.drink_options[opt], {"key": p, "value": opt, "name": self.drink_options[opt]}))
             # add a back button so the user can return without modifying
             config.addOption(Back("Back"))
             config.setParent(configuration_menu)
@@ -228,9 +227,13 @@ class Bartender(MenuDelegate):
 
     def displayMenuItem(self, menuItem):
         print (menuItem.name)
-        self.led.clear_display()
-        self.led.draw_text2(0,20,menuItem.name,2)
-        self.led.display()
+        self.lcd.fill((0,0,0))
+        text = GAME_FONT.render(menuItem.name, True, MAIN_COLOR, (0, 0, 0))
+        textrect = text.get_rect()
+        textrect.centerx = self.lcd.get_rect().centerx
+        textrect.centery = self.lcd.get_rect().centery
+        self.lcd.blit(text, textrect)
+        pygame.display.update()
 
     def cycleLights(self):
         t = threading.currentThread()
@@ -274,9 +277,9 @@ class Bartender(MenuDelegate):
     def progressBar(self, waitTime):
         interval = waitTime / 100.0
         for x in range(1, 101):
-            self.led.clear_display()
+            self.lcd.fill((0,0,0))
             self.updateProgressBar(x, y=35)
-            self.led.display()
+            pygame.display.update()
             time.sleep(interval)
 
     def makeDrink(self, drink, ingredients):
@@ -401,19 +404,19 @@ class Bartender(MenuDelegate):
         height = 10
         width = self.screen_width-2*x
         for w in range(0, width):
-            self.led.draw_pixel(w + x, y)
-            self.led.draw_pixel(w + x, y + height)
+            self.lcd.set_at((w + x, y), MAIN_COLOR)
+            self.lcd.set_at((w + x, y + height), MAIN_COLOR)
         for h in range(0, height):
-            self.led.draw_pixel(x, h + y)
-            self.led.draw_pixel(self.screen_width-x, h + y)
+            self.lcd.set_at((x, h + y), MAIN_COLOR)
+            self.lcd.set_at((SCREEN_WIDTH - x, h + y), MAIN_COLOR)
             for p in range(0, percent):
                 p_loc = int(p/100.0*width)
-                self.led.draw_pixel(x + p_loc, h + y)
+                #self.led.draw_pixel(x + p_loc, h + y)
 
     def run(self):
         self.startInterrupts()
         # main loop
-        try:  
+        try:
             while True:
                 time.sleep(0.1)
           
