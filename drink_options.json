@@ -1,10 +1,3 @@
-// abv: in percent, used to estimate the final cocktail ABV
-// description: whatever you want to show on screen if the ingredient is dived into
-// similar: interchangeable ingredient (if recipe calls for "white rum" and "rum" in configured, the drink will still be made)
-// related: non-interchangeable but related ingredient (if recipe calls specifically for "white rum" then "dark rum" shouldn't be used without prompting)
-// type: spirit, mixer, flavor, garnish - the icon that will appear next to the ingredient in the list
-// value: the value that will be written to the pump_config file - no spaces allowed
-
 {
 	"Bitters": {
 		"abv": "45",
@@ -24,7 +17,7 @@
 	},
 	"Campari Bitters": {
 		"abv": "28",
-		"description": "Campari is an alcoholic liqueur, considered an apéritif, obtained from the infusion of herbs and fruit in alcohol and water. It is a bitters, characterized by its dark red color.",
+		"description": "Campari is an alcoholic liqueur, considered an apÃ©ritif, obtained from the infusion of herbs and fruit in alcohol and water. It is a bitters, characterized by its dark red color.",
 		"related": "Bitters",
 		"type": "flavor",
 		"value": "BittersCampari"
@@ -160,41 +153,41 @@
 	},
 	"Almond Liqueur (Amaretto)": {
 		"abv": "28",
-		"description": "Amaretto (Italian for "a little bitter") is a sweet Italian liqueur that originated in Saronno, Italy. While originally flavored from bitter almonds, various modern commercial brands are prepared from a base of apricot stones, peach stones, or almonds, all of which are natural sources of the benzaldehyde that provides the principal almond-like flavor of the liqueur.",
+		"description": "Amaretto (Italian for 'a little bitter') is a sweet Italian liqueur that originated in Saronno, Italy. While originally flavored from bitter almonds, various modern commercial brands are prepared from a base of apricot stones, peach stones, or almonds, all of which are natural sources of the benzaldehyde that provides the principal almond-like flavor of the liqueur.",
 		"type": "spirit",
 		"value": "LiqueurAlmond"
-	}
-	"Chocolate Liqueur (Crème de Cacao)": {
+	},
+	"Chocolate Liqueur (CrÃ¨me de Cacao)": {
 		"abv": "20",
-		"description": "Crème de Cacao is a sweet alcoholic (chocolate bean) flavored liqueur, often scented with a hint of vanilla. It is similar to chocolate liqueur, which is usually sweeter and more syrupy.",
+		"description": "CrÃ¨me de Cacao is a sweet alcoholic (chocolate bean) flavored liqueur, often scented with a hint of vanilla. It is similar to chocolate liqueur, which is usually sweeter and more syrupy.",
 		"type": "spirit",
 		"value": "LiqueurChocolate"
-	}
+	},
 	"Coffee Liqueur (Kahlua)": {
 		"abv": "20",
 		"description": "",
 		"type": "spirit",
 		"value": "LiqueurCoffee"
-	}
+	},
 	"Cream Liqueur (Bailey's Irish)": {
 		"abv": "17",
 		"description": "Baileys Irish Cream is an Irish whiskey and cream-based liqueur, made by Diageo at Nangor Road, in Dublin, Ireland.",
 		"type": "spirit",
 		"value": "LiqueurCream"
-	}
+	},
 	"Melon Liqueur (Midori)": {
 		"abv": "20",
 		"description": "Midori is a melon-flavored liqueur that has a beautiful green color and is used in many popular cocktails that are easy and fun to mix up.",
 		"type": "spirit",
 		"value": "LiqueurMelon"
 	},
-	"Orange Liqueur (Triple Sec / Cointreau)" {
+	"Orange Liqueur (Triple Sec / Cointreau)": {
 		"abv": "40",
 		"description": "",
 		"type": "spirit",
 		"value": "LiqueurOrange"
 	},
-	"Orange Liqueur (Curaçao / Grand Marnier)" {
+	"Orange Liqueur (CuraÃ§ao / Grand Marnier)": {
 		"abv": "40",
 		"description": "",
 		"type": "spirit",
@@ -233,7 +226,7 @@
 		"related": "RumWhite",
 		"similar": "Rum",
 		"type": "spirit",
-		"value": "RumDark",
+		"value": "RumDark"
 	},
 	"White Rum": { 
 		"abv": "40",
@@ -309,7 +302,7 @@
 		"type": "spirit",
 		"value": "TequilaBlanco"
 	},
-	"Aged Tequila (Reposado/Añejo)": {
+	"Aged Tequila (Reposado/AÃ±ejo)": {
 		"abv": "40",
 		"description": "",
 		"related": "Tequila",
@@ -447,5 +440,5 @@
 		"related": "WineRed",
 		"type": "spirit",
 		"value": "WineWhite"
-	},
+	}
 }
