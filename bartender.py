@@ -112,7 +112,7 @@ class Bartender(MenuDelegate):
         # add drink options
         drink_opts = []
         for d in self.drink_list.keys():
-            drink_opts.append(MenuItem('drink', d["name"], {"ingredients": d["ingredients"]}))
+            drink_opts.append(MenuItem('drink', self.drink_list[d]['description'], {"ingredients": self.drink_list[d]['ingredients']}))
 
         configuration_menu = Menu("Configure")
 
@@ -123,8 +123,8 @@ class Bartender(MenuDelegate):
             # add fluid options for each pump
             for opt in self.drink_options.keys():
                 # star the selected option
-                selected = "*" if opt["value"] == self.pump_configuration[p]["value"] else ""
-                config.addOption(MenuItem('pump_selection', opt["name"], {"key": p, "value": opt["value"], "name": opt["name"]}))
+                selected = "*" if self.drink_options[opt] == self.pump_configuration[p]["value"] else ""
+                config.addOption(MenuItem('pump_selection', self.drink_options[opt]["name"], {"key": p, "value": opt, "name": self.drink_options[opt]["name"]}))
             # add a back button so the user can return without modifying
             config.addOption(Back("Back"))
             config.setParent(configuration_menu)
