@@ -6,21 +6,26 @@ import threading
 import traceback
 import os
 import pygame
+from urllib.request import urlopen
+from evdev import uinput, ecodes as e
 from menu import MenuItem, Menu, Back, MenuContext, MenuDelegate
 
 pygame.init()
-
+pygame.mouse.set_visible(False)
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 
 os.environ["SDL_FBDEV"] = "/dev/fb1"
 os.environ["SDL_VIDEODRIVER"] = "fbcon"
 
-SCREEN_WIDTH = 320
-SCREEN_HEIGHT = 240
+SCREEN_WIDTH = 640
+SCREEN_HEIGHT = 480
 
-OLED_RESET_PIN = 24
-OLED_DC_PIN = 22
+BTN_PINS = [17, 22, 23, 27]
+BTN_TEXT = ["Prev", "Select", "Next", "Back"]
+BTN_STATE = [0, 0, 0, 0]
+BTN_WIDTH = 140
+BTN_HEIGHT = 60
 
 NUMBER_NEOPIXELS = 45
 NEOPIXEL_DATA_PIN = 26
@@ -28,24 +33,33 @@ NEOPIXEL_CLOCK_PIN = 6
 NEOPIXEL_BRIGHTNESS = 64
 
 FLOW_RATE = 60.0/100.0
-GAME_FONT = pygame.font.Font("FreeMono.ttf", 24)
-MAIN_COLOR = (255, 255, 255)
+HEADER_FONT = pygame.font.Font("/usr/share/fonts/truetype/freefont/FreeMono.ttf", 28)
+BUTTON_FONT = pygame.font.Font("/usr/share/fonts/truetype/freefont/FreeMono.ttf", 22)
+DETAIL_FONT = pygame.font.Font("/usr/share/fonts/truetype/freefont/FreeMono.ttf", 18)
+
+BLACK = (  0,   0,   0)
+WHITE = (255, 255, 255)
+RED =   (255,   0,   0)
+GREEN = (  0, 255,   0)
+BLUE =  (  0,   0, 255)
+LTBLUE= (  0, 192, 240)
+GREY =  (128, 128, 128)
+
 
 class Bartender(MenuDelegate): 
     def __init__(self):
         self.running = False
      
         # configure interrups for buttons
-        GPIO.setup(17, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.setup(22, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.setup(23, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-        GPIO.setup(27, GPIO.IN, pull_up_down=GPIO.PUD_UP)
+        for pin in BTN_PINS:
+            GPIO.setup(pin, GPIO.IN, pull_up_down=GPIO.PUD_UP)
 
         # configure screen
         self.lcd = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
-        self.lcd.fill((255,255,255))
+        self.lcd.fill(WHITE)
         pygame.display.update()
-        self.lcd.fill((0,0,0))
+        time.sleep(0.5)
+        self.lcd.fill(BLACK)
         pygame.display.update()
         time.sleep(0.5)
 
@@ -71,49 +85,101 @@ class Bartender(MenuDelegate):
         # turn everything off
         #for i in range(0, self.numpixels):
         #    self.strip.setPixelColor(i, 0)
-        #self.strip.show() 
-
-        print ("Done initializing")
+        #self.strip.show()
 
     @staticmethod
     def readPumpConfiguration():
-        return json.load(open('pump_config.json'))
+        return json.load(open('/home/pi/Smart-Bartender/pump_config.json'))
 
     @staticmethod
     def readDrinkList():
-        return json.load(open('drink_list.json'))
+        return json.load(open('/home/pi/Smart-Bartender/drink_list.json'))
 
     @staticmethod
     def readDrinkOptions():
-        return json.load(open('drink_options.json'))
+        return json.load(open('/home/pi/Smart-Bartender/drink_options.json'))
 
     @staticmethod
     def writePumpConfiguration(configuration):
-        with open("pump_config.json", "w") as jsonFile:
+        with open("/home/pi/Smart-Bartender/pump_config.json", "w") as jsonFile:
             json.dump(configuration, jsonFile)
 
     def startInterrupts(self):
-        GPIO.add_event_detect(17, GPIO.FALLING, callback=self.btn1, bouncetime=1000)
-        GPIO.add_event_detect(22, GPIO.FALLING, callback=self.btn2, bouncetime=1000)
-        GPIO.add_event_detect(23, GPIO.FALLING, callback=self.btn3, bouncetime=1000)
-        GPIO.add_event_detect(27, GPIO.FALLING, callback=self.btn4, bouncetime=1000)
+        for pin in BTN_PINS:
+            GPIO.add_event_detect(pin, GPIO.FALLING, callback=self.btnPressed, bouncetime=400)
 
     def stopInterrupts(self):
-        GPIO.remove_event_detect(17)
-        GPIO.remove_event_detect(22)
-        GPIO.remove_event_detect(23)
-        GPIO.remove_event_detect(27)
+        for pin in BTN_PINS:
+            GPIO.remove_event_detect(pin)
+
+    def drawText(self, surface, text, color, rect, font, aa=False, bkg=None):
+        rect = pygame.Rect(rect)
+        y = rect.top
+        lineSpacing = -2
+        fontHeight = font.size("Tg")[1]
+        
+        while text:
+            i = 1
+
+            # determine if the row of text will be outside our area
+            if y + fontHeight > rect.bottom:
+                break
+            # determine maximum width of line
+            while font.size(text[:i])[0] < rect.width and i < len(text):
+                i += 1
+            # if we've wrapped the text, then adjust the wrap to the last word
+            if i < len(text):
+                i = text.rfind(" ", 0, i) + 1
+            # render the line and blit it to the surface
+            if bkg:
+                image = font.render(text[:i], 1, color, bkg)
+                image.set_colorkey(bkg)
+            else:
+                image = font.render(text[:i], aa, color)
+
+            surface.blit(image, (rect.left, y))
+            y += fontHeight + lineSpacing
+
+            # remove the text we just blitted
+            text = text[i:]
+            
+        return text
+    
+    def debugText(self, text):
+        self.drawText(self.lcd, text, RED, (0, SCREEN_HEIGHT-20, 400, 50), DETAIL_FONT)
+        pygame.display.update()
+
+    def drawButtons(self):
+        i = 0
+        pygame.draw.rect(self.lcd, BLACK, (SCREEN_WIDTH-BTN_WIDTH, (SCREEN_HEIGHT/4)-(BTN_HEIGHT*1.5), BTN_WIDTH, SCREEN_HEIGHT))
+        for state in BTN_STATE:
+            i += 1
+            if state == 2:
+                btnColor = GREEN
+            elif state == 1:
+                btnColor = BLUE
+            else:
+                btnColor = LTBLUE
+            if (BTN_TEXT[i-1] != ""):
+                pygame.draw.rect(self.lcd, btnColor, (SCREEN_WIDTH-BTN_WIDTH, (SCREEN_HEIGHT/4)*i-(BTN_HEIGHT*1.5), BTN_WIDTH, BTN_HEIGHT))
+                self.lcd.blit(BUTTON_FONT.render(BTN_TEXT[i-1], True, BLACK), (SCREEN_WIDTH-BTN_WIDTH+10, (SCREEN_HEIGHT/4)*i-(BTN_HEIGHT*1.5)+10))
+            pygame.display.update()
+    
+    def clearScreen(self):
+        self.lcd.fill(BLACK)
+        self.drawButtons()
 
     def buildMenu(self):
         # create a new main menu
-        m = Menu("Main Menu")
+        mm = Menu("Main Menu")
+        cm = Menu("Configure")
 
         # add drink options
-        drink_opts = []
         for d in self.drink_list.keys():
-            drink_opts.append(MenuItem('drink', self.drink_list[d]['description'], {"ingredients": self.drink_list[d]['ingredients']}))
-
-        configuration_menu = Menu("Configure")
+            dm = Menu(self.drink_list[d]["name"])
+            dm.addOption(MenuItem('drink', self.drink_list[d]['name'], {"ingredients": self.drink_list[d]['ingredients']}))
+            dm.setParent(mm)
+            mm.addOption(dm)
 
         # add pump configuration options
         pump_opts = []
@@ -122,62 +188,22 @@ class Bartender(MenuDelegate):
             # add fluid options for each pump
             for opt in self.drink_options.keys():
                 # star the selected option
-                selected = "*" if self.drink_options[opt] == self.pump_configuration[p]["value"] else ""
-                config.addOption(MenuItem('pump_selection', self.drink_options[opt], {"key": p, "value": opt, "name": self.drink_options[opt]}))
+                selected = "*" if self.drink_options[opt]["value"] == self.pump_configuration[p]["value"] else ""
+                config.addOption(MenuItem('pump_selection', opt, {"key": p, "value": self.drink_options[opt]["value"], "name": opt}))
             # add a back button so the user can return without modifying
             config.addOption(Back("Back"))
-            config.setParent(configuration_menu)
+            config.setParent(cm)
             pump_opts.append(config)
 
         # add pump menus to the configuration menu
-        configuration_menu.addOptions(pump_opts)
-        # add a back button to the configuration menu
-        configuration_menu.addOption(Back("Back"))
-        # adds an option that cleans all pumps to the configuration menu
-        configuration_menu.addOption(MenuItem('clean', 'Clean'))
-        configuration_menu.setParent(m)
-
-        m.addOptions(drink_opts)
-        m.addOption(configuration_menu)
+        cm.addOptions(pump_opts)
+        cm.addOption(MenuItem('clean', 'Clean'))
+        cm.addOption(Back("Back"))
+        cm.setParent(mm)
+        mm.addOption(cm)
+        
         # create a menu context
-        self.menuContext = MenuContext(m, self)
-
-    def filterDrinks(self, menu):
-        """
-        Removes any drinks that can't be handled by the pump configuration
-        """
-        for i in menu.options:
-            if (i.type == "drink"):
-                i.visible = False
-                ingredients = i.attributes["ingredients"]
-                presentIng = 0
-                for ing in ingredients.keys():
-                    for p in self.pump_configuration.keys():
-                        if (ing == self.pump_configuration[p]["value"]):
-                            presentIng += 1
-                if (presentIng == len(ingredients.keys())): 
-                    i.visible = True
-            elif (i.type == "menu"):
-                self.filterDrinks(i)
-
-    def selectConfigurations(self, menu):
-        """
-        Adds a selection star to the pump configuration option
-        """
-        for i in menu.options:
-            if (i.type == "pump_selection"):
-                key = i.attributes["key"]
-                if (self.pump_configuration[key]["value"] == i.attributes["value"]):
-                    i.name = "%s %s" % (i.attributes["name"], "*")
-                else:
-                    i.name = i.attributes["name"]
-            elif (i.type == "menu"):
-                self.selectConfigurations(i)
-
-    def prepareForRender(self, menu):
-        self.filterDrinks(menu)
-        self.selectConfigurations(menu)
-        return True
+        self.menuContext = MenuContext(mm, self)
 
     def menuItemClicked(self, menuItem):
         if (menuItem.type == "drink"):
@@ -186,6 +212,7 @@ class Bartender(MenuDelegate):
         elif(menuItem.type == "pump_selection"):
             self.pump_configuration[menuItem.attributes["key"]]["value"] = menuItem.attributes["value"]
             Bartender.writePumpConfiguration(self.pump_configuration)
+            self.menuContext.back()
             return True
         elif(menuItem.type == "clean"):
             self.clean()
@@ -226,13 +253,88 @@ class Bartender(MenuDelegate):
         self.running = False
 
     def displayMenuItem(self, menuItem):
-        print (menuItem.name)
-        self.lcd.fill((0,0,0))
-        text = GAME_FONT.render(menuItem.name, True, MAIN_COLOR, (0, 0, 0))
-        textrect = text.get_rect()
-        textrect.centerx = self.lcd.get_rect().centerx
-        textrect.centery = self.lcd.get_rect().centery
-        self.lcd.blit(text, textrect)
+        if (menuItem.type == "drink"):
+            BTN_TEXT[0] = ""
+            BTN_TEXT[1] = "Confirm"
+            BTN_TEXT[2] = ""
+            BTN_TEXT[3] = "Back"
+        elif (menuItem.type == "menu" and menuItem.name[:4] != "Pump"):
+            BTN_TEXT[0] = "Prev"
+            BTN_TEXT[1] = "Select"
+            BTN_TEXT[2] = "Next"
+            BTN_TEXT[3] = ""
+        else:
+            BTN_TEXT[0] = "Prev"
+            BTN_TEXT[1] = "Select"
+            BTN_TEXT[2] = "Next"
+            BTN_TEXT[3] = "Back"
+        self.clearScreen()
+        self.drawText(self.lcd, menuItem.name, WHITE, (20, 60, 400, 300), HEADER_FONT)
+        
+        if (menuItem.type == "drink"):
+            # Drink confirm menu
+            self.drawButtons()
+            i = 0
+            pumps = []
+            ings = []
+            ing_loaded = []
+            ing_manual = []
+            
+            print(self.drink_list[menuItem.name]["image"])
+            #image_str = urlopen(self.drink_list[menuItem.name]["image"]).read()
+            #image_file = io.BytesIO(image_str)
+            #image = pg.image.load(image_file)
+            #self.lcd.blit(image, (0, 0))
+            
+            for p in self.pump_configuration.keys():
+                pumps.append(self.pump_configuration[p]["value"])
+            for ing in self.drink_list[menuItem.name]["ingredients"]:
+                for o in self.drink_options.keys():
+                    if (ing in pumps) and (ing == self.drink_options[o]["value"]):
+                        ing_loaded.append(self.drink_options[o]["name"])
+                    elif (ing == self.drink_options[o]["value"]):
+                        ing_manual.append(self.drink_options[o]["name"])
+            if ing_loaded:
+                for ing in ing_loaded:
+                    i += 1
+                    self.drawText(self.lcd, ing, WHITE, (40, 100+(i*20), 600, 200), DETAIL_FONT)
+            i += 2
+            if ing_manual:
+                self.drawText(self.lcd, "MANUALLY ADD:", WHITE, (30, 100+(i*20), 600, 200), DETAIL_FONT)
+                for ing in ing_manual:
+                    i += 1
+                    self.drawText(self.lcd, ing, WHITE, (40, 100+(i*20), 400, 300), DETAIL_FONT)
+            
+            self.drawText(self.lcd, 'Preparation: '+ self.drink_list[menuItem.name]["preparation"], WHITE, (40, SCREEN_HEIGHT-150, 400, 100), DETAIL_FONT)
+            self.drawText(self.lcd, 'Served in: ' + self.drink_list[menuItem.name]["drinkware"], WHITE, (40, SCREEN_HEIGHT-50, 400, 50), DETAIL_FONT)
+        elif (menuItem.type == "menu"):
+            if (menuItem.name[:4] == "Pump"):
+                for p in self.pump_configuration.keys():
+                    if (self.pump_configuration[p]["name"] == menuItem.name):
+                        for o in self.drink_options.keys():
+                            if (self.pump_configuration[p]["value"] == self.drink_options[o]["value"]):
+                                self.drawText(self.lcd, self.drink_options[o]["name"], WHITE, (40, 120, 400, 600), DETAIL_FONT)
+            elif (menuItem.name != "Configure"):
+                # Drink select menu
+                ingredients = self.drink_list[menuItem.name]["ingredients"]
+                presentIng = 0
+                for ing in ingredients.keys():
+                    for p in self.pump_configuration.keys():
+                        if (ing == self.pump_configuration[p]["value"]):
+                            presentIng += 1
+                if (presentIng == len(ingredients.keys())): 
+                    textColor = WHITE
+                else:
+                    textColor = GREY
+                    self.drawText(self.lcd, '(not all ingredients present)', textColor, (20, 90, 400, 200), DETAIL_FONT)
+                
+                self.drawText(self.lcd, self.drink_list[menuItem.name]["description"], textColor, (40, 120, 400, 600), DETAIL_FONT)
+                self.drawText(self.lcd, 'Preparation: '+ self.drink_list[menuItem.name]["preparation"], textColor, (40, SCREEN_HEIGHT-150, 400, 100), DETAIL_FONT)
+                self.drawText(self.lcd, 'Served in: ' + self.drink_list[menuItem.name]["drinkware"], textColor, (40, SCREEN_HEIGHT-50, 400, 50), DETAIL_FONT)
+        elif (menuItem.type == "pump_selection"):
+            self.drawText(self.lcd, self.drink_options[menuItem.name]["description"], WHITE, (40, 120, 400, 600), DETAIL_FONT)
+            self.drawText(self.lcd, 'Type: '+ self.drink_options[menuItem.name]["type"], WHITE, (40, SCREEN_HEIGHT-150, 400, 100), DETAIL_FONT)
+        
         pygame.display.update()
 
     def cycleLights(self):
@@ -277,19 +379,18 @@ class Bartender(MenuDelegate):
     def progressBar(self, waitTime):
         interval = waitTime / 100.0
         for x in range(1, 101):
-            self.lcd.fill((0,0,0))
-            self.updateProgressBar(x, y=35)
+            self.updateProgressBar(x, y=20)
             pygame.display.update()
             time.sleep(interval)
 
     def makeDrink(self, drink, ingredients):
         # cancel any button presses while the drink is being made
-        # self.stopInterrupts()
+        self.stopInterrupts()
         self.running = True
 
         # launch a thread to control lighting
-        lightsThread = threading.Thread(target=self.cycleLights)
-        lightsThread.start()
+        #lightsThread = threading.Thread(target=self.cycleLights)
+        #lightsThread.start()
 
         # Parse the drink ingredients and spawn threads for pumps
         maxTime = 0
@@ -318,114 +419,95 @@ class Bartender(MenuDelegate):
         self.menuContext.showMenu()
 
         # stop the light thread
-        lightsThread.do_run = False
-        lightsThread.join()
+        #lightsThread.do_run = False
+        #lightsThread.join()
 
         # show the ending sequence lights
-        self.lightsEndingSequence()
+        #self.lightsEndingSequence()
 
         # sleep for a couple seconds to make sure the interrupts don't get triggered
         time.sleep(2);
 
         # reenable interrupts
-        # self.startInterrupts()
+        self.startInterrupts()
         self.running = False
 
-    def btn1(self, ctx):
-        if not self.running:
-            global btn1Time
-            start_time = time.time()
-
-            while GPIO.input(ctx) == 0: # Wait for the button up
-                pass
-
-            btn1Time = time.time() - start_time    # How long was the button down?
-
-            if btn1Time >= .1:
-                # short press
-                self.menuContext.prev()
-            if btn1Time >= 3:
-                # long press
-                self.menuContext.prev()
-
-    def btn2(self, ctx):
-        if not self.running:
-            global btn2Time
-            start_time = time.time()
-
-            while GPIO.input(ctx) == 0: # Wait for the button up
-                pass
-
-            btn2Time = time.time() - start_time    # How long was the button down?
-
-            if btn2Time >= .1:
-                # short press
-                self.menuContext.select()
-            if btn2Time >= 3:
-                # long press
-                self.menuContext.select()
-
-    def btn3(self, ctx):
-        if not self.running:
-            global btn3Time
-            start_time = time.time()
-
-            while GPIO.input(ctx) == 0: # Wait for the button up
-                pass
-
-            btn3Time = time.time() - start_time    # How long was the button down?
-
-            if btn3Time >= .1:
-                # short press
-                self.menuContext.next()
-            if btn3Time >= 3:
-                # long press
-                self.menuContext.next()
-
-    def btn4(self, ctx):
-        if not self.running:
-            global btn4Time
-            start_time = time.time()
-
-            while GPIO.input(ctx) == 0: # Wait for the button up
-                pass
-
-            btn4Time = time.time() - start_time    # How long was the button down?
-
-            if btn4Time >= .1:
-                # short press
-                self.menuContext.back()
-            if btn4Time >= 3:
-                # long press
-                os.system("sudo shutdown -h now")
-
+    def btnPressed(self, ctx):
+        with uinput.UInput() as ui:
+            if (ctx == 17):
+                ui.write(e.EV_KEY, e.KEY_UP, 1)
+            elif (ctx == 22):
+                ui.write(e.EV_KEY, e.KEY_RIGHT, 1)
+            elif (ctx == 23):
+                ui.write(e.EV_KEY, e.KEY_DOWN, 1)
+            elif (ctx == 27):
+                ui.write(e.EV_KEY, e.KEY_LEFT, 1)
+            ui.syn()
 
     def updateProgressBar(self, percent, x=15, y=15):
-        height = 10
-        width = self.screen_width-2*x
+        height = 20
+        width = SCREEN_WIDTH - 2 * x
         for w in range(0, width):
-            self.lcd.set_at((w + x, y), MAIN_COLOR)
-            self.lcd.set_at((w + x, y + height), MAIN_COLOR)
+            self.lcd.set_at((w + x, y), GREEN)
+            self.lcd.set_at((w + x, y + height), GREEN)
         for h in range(0, height):
-            self.lcd.set_at((x, h + y), MAIN_COLOR)
-            self.lcd.set_at((SCREEN_WIDTH - x, h + y), MAIN_COLOR)
+            self.lcd.set_at((x, h + y), GREEN)
+            self.lcd.set_at((SCREEN_WIDTH - x, h + y), GREEN)
             for p in range(0, percent):
                 p_loc = int(p/100.0*width)
-                #self.led.draw_pixel(x + p_loc, h + y)
+                self.lcd.set_at((x + p_loc, h + y), GREEN)
+                
+    def processInput(self):
+        for event in pygame.event.get():
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    BTN_STATE[0] = 1
+                    self.drawButtons()
+                    time.sleep(0.2)
+                    self.menuContext.prev()
+                    BTN_STATE[0] = 0
+                    self.drawButtons()
+                elif event.key == pygame.K_RIGHT:
+                    BTN_STATE[1] = 1
+                    self.drawButtons()
+                    time.sleep(0.2)
+                    self.menuContext.select()
+                    BTN_STATE[1] = 0
+                    self.drawButtons()
+                elif event.key == pygame.K_DOWN:
+                    BTN_STATE[2] = 1
+                    self.drawButtons()
+                    time.sleep(0.2)
+                    self.menuContext.next()
+                    BTN_STATE[2] = 0
+                    self.drawButtons()
+                elif event.key == pygame.K_LEFT:
+                    BTN_STATE[3] = 1
+                    self.drawButtons()
+                    time.sleep(0.2)
+                    self.menuContext.back()
+                    BTN_STATE[3] = 0
+                    self.drawButtons()
 
     def run(self):
         self.startInterrupts()
+        self.drawButtons()
         # main loop
         try:
             while True:
+                self.processInput()                
                 time.sleep(0.1)
           
         except KeyboardInterrupt:  
-            GPIO.cleanup()       # clean up GPIO on CTRL+C exit  
-        GPIO.cleanup()           # clean up GPIO on normal exit 
-
-        traceback.print_exc()
-
+            print ("Keyboard interrupt")
+        
+        except:
+            print ("some error")
+        
+        finally:
+            print ("clean up")
+            GPIO.cleanup()           # clean up GPIO on normal exit
+            traceback.print_exc()
 
 bartender = Bartender()
 bartender.buildMenu()
