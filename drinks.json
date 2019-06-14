@@ -1,0 +1,212 @@
+[
+	{
+		"name": "Vesper",
+		"character": "boozy",
+		"description": "The Vesper or Vesper Martini is a cocktail that was originally made of gin, vodka, and Kina Lillet.",
+		"drinkware": "Cocktail glass",
+		"external": "https://en.wikipedia.org/wiki/Vesper_(cocktail)",
+		"image": "https://cdn.liquor.com/wp-content/uploads/2018/01/29145254/vesper-720x720-recipe.jpg",
+		"preparation": "Use a chilled cocktail glass. Add a lemon twist garnish. Served straight up without ice.",
+		"ingredients": [
+			{ "unit": "cl", "amount": 6, "value": "Gin", "name": "2 oz Gin" },
+			{ "unit": "cl", "amount": 1.5, "value": "Vodka", "name": "1/2 oz Vodka" },
+			{ "unit": "cl", "amount": 0.75, "value": "VermouthDry", "name": "1/4 oz Dry Vermouth" }
+		],
+		"value": "Vesper"
+	},
+	{
+		"name": "Negroni",
+		"character": [ "boozy", "balanced" ],
+		"description": "The Negroni is an iconic Italian cocktail, made of one part gin, one part vermouth rosso, and one part Campari, garnished with orange peel. It is considered an apéritif. The Negroni and the Americano are known as the Red Martini.",
+		"drinkware": "Old fashioned glass",
+		"external": "https://en.wikipedia.org/wiki/Negroni",
+		"image": "https://cdn.liquor.com/wp-content/uploads/2018/05/08110806/negroni-720x720-recipe.jpg",
+		"preparation": "Use a glass filled with ice.",
+		"ingredients": [
+			{ "unit": "cl", "amount": 3, "value": "Gin", "name": "1 oz Gin" },
+			{ "unit": "cl", "amount": 3, "value": "BittersCampari", "name": "1 oz Campari" },
+			{ "unit": "cl", "amount": 3, "value": "VermouthSweet", "name": "1 oz Sweet Vermouth" },
+			{ "value": "garnish", "name": "Orange peel garnish" }
+		],
+		"value": "Negroni"
+	},
+	{
+		"name": "Old Fashioned",
+		"character": "boozy",
+		"description": "The Old Fashioned is a cocktail made by muddling sugar with bitters, then adding alcohol, originally whiskey but now sometimes brandy and finally a twist of citrus rind. It is traditionally served in a short, round, tumbler-like glass, which is called an Old Fashioned glass, after the drink.",
+		"drinkware": "Old fashioned glass",
+		"external": "https://en.wikipedia.org/wiki/Old_Fashioned",
+		"garnish": "",
+		"image": "https://cdn.liquor.com/wp-content/uploads/2018/05/08113350/bourbon-old-fashioned-720x720-recipe.jpg",
+		"preparation": "Place sugar cube in old fashioned glass and saturate with bitters, add a dash of plain water and muddle until dissolved, then fill the glass with ice cubes.",
+		"ingredients": [
+			{ "unit": "cl", "amount": 4.5, "value": "Whiskey", "name": "1 3/4 oz Whiskey" },
+			{ "unit": "cl", "amount": 0.014, "value": "Bitters", "name": "2 dashes bitters" },
+			{ "value": "garnish", "name": "Orange slice and a cocktail cherry garnish" }
+		],
+		"value": "OldFashioned"
+	},
+	{
+		"name": "Mojito",
+		"character": "balanced",
+		"description": "Mojito is a traditional Cuban highball. Traditionally, a mojito is a cocktail that consists of five ingredients: white rum, sugar, lime juice, soda water, and mint. Its combination of sweetness, citrus, and mint flavors is intended to complement the rum, and has made the mojito a popular summer drink.",
+		"drinkware": "Collins glass",
+		"external": "https://en.wikipedia.org/wiki/Mojito",
+		"image": "https://cdn.liquor.com/wp-content/uploads/2018/09/04153106/mojito-720x720-recipe.jpg",
+		"preparation": "Muddle mint sprigs with sugar and soda water.",
+		"ingredients": [
+			{ "unit": "cl", "amount": 4, "value": "Rum", "name": "1 1/4 oz Rum" },
+			{ "unit": "cl", "amount": 3, "value": "JuiceLime", "name": "1 oz Lime Juice" },
+			{ "unit": "cl", "amount": 2, "value": "SyrupSimple", "name": "3/4 oz Simple Syrup" },
+			{ "value": "garnish", "name": "Sprig of mint garnish" }
+		],
+		"value": "Mojito"
+	},
+	{
+		"name": "Sea Breeze",
+		"character": "sweet",
+		"description": "A Sea Breeze is a cocktail containing vodka with cranberry juice and grapefruit juice. The cocktail is usually consumed during summer months. The drink may be shaken in order to create a foamy surface.",
+		"drinkware": "Highball glass",
+		"external": "https://en.wikipedia.org/wiki/Sea_Breeze_(cocktail)",
+		"image": "https://cdn.liquor.com/wp-content/uploads/2011/06/04124606/sea-breeze-720-720-recipe.jpg",
+		"preparation": "Use a glass filled with ice.",
+		"ingredients": [
+			{ "unit": "cl", "amount": 4, "value": "Vodka", "name": "1 1/4 oz Vodka" },
+			{ "unit": "cl", "amount": 12, "value": "JuiceCranberry", "name": "4 oz Cranberry Juice" },
+			{ "unit": "cl", "amount": 3, "value": "JuiceGrapefruit", "name": "1 oz Grapefruit Juice" },
+			{ "value": "garnish", "name": "Lime wedge garnish" }
+		],
+		"value": "SeaBreeze"
+	},
+	{
+		"name": "Long Island Iced Tea",
+		"character": "boozy",
+		"description": "A Long Island Iced Tea is a type of alcoholic mixed drink typically made with vodka, tequila, light rum, triple sec, gin, and a splash of cola, which gives the drink the same amber hue as its namesake. A popular version mixes equal parts vodka, gin, rum, triple sec, with ?1 ¹/2 parts sour mix and a splash of cola.",
+		"drinkware": "Highball glass",
+		"external": "https://en.wikipedia.org/wiki/Long_Island_Iced_Tea",
+		"image": "https://cdn.liquor.com/wp-content/uploads/2019/03/14090749/Long-Island-Iced-Tea-720x720-article.jpg",
+		"preparation": "Use a glass filled with ice.",
+		"ingredients": [
+			{ "unit": "cl", "amount": 1.5, "value": "Tequila", "name": "1/2 oz Tequila" },
+			{ "unit": "cl", "amount": 1.5, "value": "Vodka", "name": "1/2 oz Vodka" },
+			{ "unit": "cl", "amount": 1.5, "value": "RumWhite", "name": "1/2 oz White Rum" },
+			{ "unit": "cl", "amount": 1.5, "value": "Gin", "name": "1/2 oz Gin" },
+			{ "unit": "cl", "amount": 1.5, "value": "LiqueurOrange", "name": "1/2 oz Orange Liqueur" },
+			{ "unit": "cl", "amount": 2.5, "value": "JuiceLemon", "name": "1 oz Lemon Juice" },
+			{ "unit": "cl", "amount": 3, "value": "SyrupGrenadine", "name": "1 oz Grenadine" },
+			{ "value": "garnish", "name": "Lemon spiral garnish" }
+		],
+		"value": "LongIsland"
+	},
+	{
+		"name": "Mimosa",
+		"character": [ "refreshing", "sweet" ],
+		"description": "A mimosa cocktail is composed of one part champagne and one part chilled citrus juice, usually orange juice unless otherwise specified. It is traditionally served in a tall champagne flute at brunch, at weddings, by the pint, or as part of first class service on some passenger railways and airlines.",
+		"drinkware": "Champagne flute",
+		"external": "https://en.wikipedia.org/wiki/Mimosa_(cocktail)",
+		"image": "https://cdn.liquor.com/wp-content/uploads/2019/03/25115355/absolut-mimosa_white11.png",
+		"preparation": "Ensure both ingredients are well chilled.",
+		"ingredients": [
+			{ "unit": "cl", "amount": 7.5, "value": "WineSparkling", "name": "2.5 oz Sparkling Wine" },
+			{ "unit": "cl", "amount": 7.5, "value": "JuiceOrange", "name": "2.5 oz Orange Juice" },
+			{ "value": "garnish", "name": "Optional garnishes: Cherries, Strawberries, Grenadine" }
+		],
+		"value": "Mimosa"
+	},
+	{
+		"name": "Screwdriver",
+		"character": "balanced",
+		"description": "A screwdriver is a popular alcoholic highball drink made with orange juice and vodka. While the basic drink is simply the two ingredients, there are many variations; the most common one is made with one part vodka, one part of any kind of orange soda, and one part of orange juice.",
+		"drinkware": "Highball glass",
+		"external": "https://en.wikipedia.org/wiki/Screwdriver_(cocktail)",
+		"image": "https://cdn.liquor.com/wp-content/uploads/2017/11/06162348/screwdrvier-720x720-recipe.jpg",
+		"preparation": "Use a glass filled with ice.",
+		"ingredients": [
+			{ "unit": "cl", "amount": 5, "value": "Vodka", "name": "1.5 oz Vodka" },
+			{ "unit": "cl", "amount": 10, "value": "JuiceOrange", "name": "3.5 oz Orange Juice" },
+			{ "value": "garnish", "name": "Orange slice garnish" }
+		],
+		"value": "Screwdriver"
+	},
+	{
+		"name": "Whiskey Sour",
+		"character": "acidic",
+		"description": "Sours are mixed drinks containing a base liquor, lemon or lime juice, and a sweetener (triple sec, simple syrup, grenadine, or pineapple juice are common). Egg whites are also included in some sours.",
+		"drinkware": "Rocks glass",
+		"external": "https://en.wikipedia.org/wiki/Whiskey_sour",
+		"image": "https://cdn.liquor.com/wp-content/uploads/2015/08/woodford_whiskeysour_2_800x800.png",
+		"preparation": "Use a glass filled with ice.",
+		"ingredients": [
+			{ "unit": "cl", "amount": 4.5, "value": "Whiskey", "name": "1.5 oz Whiskey" },
+			{ "unit": "cl", "amount": 3, "value": "JuiceLemon", "name": "1 oz Lemon Juice" },
+			{ "unit": "cl", "amount": 1.5, "value": "SyrupGrenadine", "name": "0.5 oz Grenadine" },
+			{ "value": "garnish", "name": "Cherry and Lemon wedge garnish" }
+		],
+		"value": "WhiskeySour"
+	},
+	{
+		"name": "Cuba Libre (Rum & Coke)",
+		"character": "balanced",
+		"description": "Rum and Coke, or the Cuba Libre, is a highball cocktail consisting of cola, rum, and in many recipes lime juice on ice. Traditionally, the cola ingredient is Coca-Cola, and the alcohol is a Cuban light rum such as Bacardi.",
+		"drinkware": "Highball glass",
+		"external": "https://en.wikipedia.org/wiki/Rum_and_Coke",
+		"image": "https://cdn.liquor.com/wp-content/uploads/2018/01/02105149/Cuba-Libre-720x720-recipe.jpg",
+		"preparation": "Use ice filled glass",
+		"ingredients": [
+			{ "unit": "cl", "amount": 5, "value": "RumWhite", "name": "1.5 oz White Rum" },
+			{ "unit": "cl", "amount": 12, "value": "SodaCola", "name": "4 oz Cola" },
+			{ "unit": "cl", "amount": 1, "value": "JuiceLime", "name": "0.5 oz Lime Juice" },
+			{ "value": "garnish", "name": "Lime wedge garnish" }
+		],
+		"value": "CubaLibre"
+	},
+	{
+		"name": "Manhattan",
+		"character": "boozy",
+		"description": "A Manhattan is a cocktail made with whiskey, sweet vermouth and bitters. While rye is the traditional whiskey of choice, other commonly used whiskeys include Canadian whisky, bourbon, blended whiskey and Tennessee whiskey.",
+		"drinkware": "Cocktail glass",
+		"external": "https://en.wikipedia.org/wiki/Manhattan_(cocktail)",
+		"image": "https://cdn.liquor.com/wp-content/uploads/2018/05/10144903/Manhattan-720x720-recipe.jpg",
+		"preparation": "Use ice filled glass, then strain into a chilled glass.",
+		"ingredients": [
+			{ "unit": "cl", "amount": 5, "value": "Whiskey", "name": "2 oz Whiskey" },
+			{ "unit": "cl", "amount": 2, "value": "VermouthSweet", "name": "1 oz Sweet Vermouth" },
+			{ "unit": "cl", "amount": 0.014, "value": "BittersAromatic", "name": "2 dashes Aromatic Bitters" },
+			{ "value": "garnish", "name": "Cherry garnish" }
+		],
+		"value": "Manhattan"
+	},
+	{
+		"name": "Gin Fizz",
+		"character": [ "refreshing", "balanced" ],
+		"description": "A fizz is a mixed drink variation on the older sours family of cocktail. Its defining features are an acidic juice and carbonated water.",
+		"drinkware": "Old Fashioned glass",
+		"external": "https://en.wikipedia.org/wiki/Fizz_(cocktail)#Gin_fizz",
+		"image": "https://cdn.liquor.com/wp-content/uploads/2017/08/25101601/gin-fizz-720-720-article.jpg",
+		"preparation": "Use ice filled glass. Top with soda water after other ingredients.",
+		"ingredients": [
+			{ "unit": "cl", "amount": 4.5, "value": "Gin", "name": "1.5 oz Gin" },
+			{ "unit": "cl", "amount": 3, "value": "JuiceLemon", "name": "1 oz Lemon Juice" },
+			{ "unit": "cl", "amount": 1, "value": "SyrupGrenadine", "name": "1/3 oz Grenadine" },
+			{ "unit": "cl", "amount": 8, "value": "SodaWater", "name": "2.5 oz Soda Water" },
+			{ "value": "garnish", "name": "Lemon slice garnish" }
+		],
+		"value": "GinFizz"
+	},
+	{
+		"name": "Margarita",
+		"character": "balanced",
+		"description": "A margarita is a cocktail consisting of tequila, orange liqueur, and lime juice often served with salt on the rim of the glass. The drink is served shaken with ice, blended with ice, or without ice.",
+		"drinkware": "Margarita glass",
+		"external": "https://en.wikipedia.org/wiki/Margarita",
+		"image": "https://cdn.liquor.com/wp-content/uploads/2017/07/05150949/Frozen-Margarita-720x720-recipe.jpg",
+		"preparation": "Rub the rim of the glass with the lime slice to make the salt stick to it. Shake the other ingredients with ice, then carefully pour into the glass. Garnish and serve over ice.",
+		"ingredients": [
+			{ "unit": "cl", "amount": 6, "value": "Tequila", "name": "2 oz Tequila" },
+			{ "unit": "cl", "amount": 3, "value": "JuiceLime", "name": "1 oz Lime Juice" },
+			{ "unit": "cl", "amount": 3, "value": "LiqueurOrange", "name": "1 oz Orange Liqueur" },
+			{ "value": "garnish", "name": "Lime slice garnish, salt on the rim (optional)" }
+		],
+		"value": "Margarita"
+	}
+]

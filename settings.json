@@ -1,0 +1,22 @@
+[
+	{
+        "value": "related",
+		"name": "Use 'Related' ingredients?",
+		"description": "If ingredients that are considered 'related' to required ingredients are loaded on a pump, should they be used? Related ingredients are more general - for example, if Blueberry Vodka is called for, plain Vodka would be substituted if it were loaded",
+		"set": "Yes",
+		"options": [ "Yes", "No" ]
+	},
+	{
+        "value": "similar",
+		"name": "Use 'Similar' ingredients?",
+		"description": "If ingredients that are considered 'similar' to required ingredients are loaded on a pump, should they be used? Similar ingredients are more specific - for example, if Gin is called for, Old Tom Gin would be substituted if it were loaded",
+		"set": "Yes",
+		"options": [ "Yes", "No" ]
+	},
+	{
+        "value": "flow",
+		"name": "Flow Rate",
+		"description": "Flow rate of your pumps. A good value for peristaltic pumps is 60.0/100.0",
+		"set": "0.6"
+	}
+]

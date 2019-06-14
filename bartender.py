@@ -6,11 +6,11 @@ import threading
 import traceback
 import os
 import pygame
-from urllib.request import urlopen
-from evdev import uinput, ecodes as e
+from pynput.keyboard import Key, Controller
 from menu import MenuItem, Menu, Back, MenuContext, MenuDelegate
 
 pygame.init()
+keyboard = Controller()
 pygame.mouse.set_visible(False)
 GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
@@ -106,7 +106,7 @@ class Bartender(MenuDelegate):
 
     def startInterrupts(self):
         for pin in BTN_PINS:
-            GPIO.add_event_detect(pin, GPIO.FALLING, callback=self.btnPressed, bouncetime=400)
+            GPIO.add_event_detect(pin, GPIO.BOTH, callback=self.btnPressed, bouncetime=100)
 
     def stopInterrupts(self):
         for pin in BTN_PINS:
@@ -151,7 +151,6 @@ class Bartender(MenuDelegate):
 
     def drawButtons(self):
         i = 0
-        pygame.draw.rect(self.lcd, BLACK, (SCREEN_WIDTH-BTN_WIDTH, (SCREEN_HEIGHT/4)-(BTN_HEIGHT*1.5), BTN_WIDTH, SCREEN_HEIGHT))
         for state in BTN_STATE:
             i += 1
             if state == 2:
@@ -163,6 +162,8 @@ class Bartender(MenuDelegate):
             if (BTN_TEXT[i-1] != ""):
                 pygame.draw.rect(self.lcd, btnColor, (SCREEN_WIDTH-BTN_WIDTH, (SCREEN_HEIGHT/4)*i-(BTN_HEIGHT*1.5), BTN_WIDTH, BTN_HEIGHT))
                 self.lcd.blit(BUTTON_FONT.render(BTN_TEXT[i-1], True, BLACK), (SCREEN_WIDTH-BTN_WIDTH+10, (SCREEN_HEIGHT/4)*i-(BTN_HEIGHT*1.5)+10))
+            else:
+                pygame.draw.rect(self.lcd, BLACK, (SCREEN_WIDTH-BTN_WIDTH, (SCREEN_HEIGHT/4)*i-(BTN_HEIGHT*1.5), BTN_WIDTH, BTN_HEIGHT))
             pygame.display.update()
     
     def clearScreen(self):
@@ -207,7 +208,10 @@ class Bartender(MenuDelegate):
 
     def menuItemClicked(self, menuItem):
         if (menuItem.type == "drink"):
-            self.makeDrink(menuItem.name, menuItem.attributes["ingredients"])
+            if BTN_STATE[1] == 2:
+                self.makeDrink(menuItem.name, menuItem.attributes["ingredients"], True)
+            else:
+                self.makeDrink(menuItem.name, menuItem.attributes["ingredients"])
             return True
         elif(menuItem.type == "pump_selection"):
             self.pump_configuration[menuItem.attributes["key"]]["value"] = menuItem.attributes["value"]
@@ -273,6 +277,7 @@ class Bartender(MenuDelegate):
         
         if (menuItem.type == "drink"):
             # Drink confirm menu
+            self.clearScreen()
             self.drawButtons()
             i = 0
             pumps = []
@@ -280,11 +285,11 @@ class Bartender(MenuDelegate):
             ing_loaded = []
             ing_manual = []
             
-            print(self.drink_list[menuItem.name]["image"])
-            #image_str = urlopen(self.drink_list[menuItem.name]["image"]).read()
-            #image_file = io.BytesIO(image_str)
-            #image = pg.image.load(image_file)
-            #self.lcd.blit(image, (0, 0))
+            self.drawText(self.lcd, menuItem.name, WHITE, (170, 60, 300, 300), HEADER_FONT)
+            if (self.drink_list[menuItem.name]["image"] != ""):
+                pic = pygame.image.load(self.drink_list[menuItem.name]["image"])
+                pic = pygame.transform.scale(pic, (150, 150))
+                self.lcd.blit(pic, (0, 0))
             
             for p in self.pump_configuration.keys():
                 pumps.append(self.pump_configuration[p]["value"])
@@ -297,16 +302,17 @@ class Bartender(MenuDelegate):
             if ing_loaded:
                 for ing in ing_loaded:
                     i += 1
-                    self.drawText(self.lcd, ing, WHITE, (40, 100+(i*20), 600, 200), DETAIL_FONT)
+                    self.drawText(self.lcd, ing, WHITE, (40, 150+(i*20), 600, 200), DETAIL_FONT)
             i += 2
             if ing_manual:
-                self.drawText(self.lcd, "MANUALLY ADD:", WHITE, (30, 100+(i*20), 600, 200), DETAIL_FONT)
+                self.drawText(self.lcd, "MANUALLY ADD:", WHITE, (30, 150+(i*20), 600, 200), DETAIL_FONT)
                 for ing in ing_manual:
                     i += 1
-                    self.drawText(self.lcd, ing, WHITE, (40, 100+(i*20), 400, 300), DETAIL_FONT)
-            
-            self.drawText(self.lcd, 'Preparation: '+ self.drink_list[menuItem.name]["preparation"], WHITE, (40, SCREEN_HEIGHT-150, 400, 100), DETAIL_FONT)
+                    self.drawText(self.lcd, ing, WHITE, (40, 150+(i*20), 400, 300), DETAIL_FONT)
+            i += 2
+            self.drawText(self.lcd, 'Preparation: '+ self.drink_list[menuItem.name]["preparation"], WHITE, (40, 150+(i*20), 400, 100), DETAIL_FONT)
             self.drawText(self.lcd, 'Served in: ' + self.drink_list[menuItem.name]["drinkware"], WHITE, (40, SCREEN_HEIGHT-50, 400, 50), DETAIL_FONT)
+            self.drawText(self.lcd, 'Hold 2 secs for a Double', LTBLUE, (SCREEN_WIDTH-140, SCREEN_HEIGHT-265, 130, 200), DETAIL_FONT)
         elif (menuItem.type == "menu"):
             if (menuItem.name[:4] == "Pump"):
                 for p in self.pump_configuration.keys():
@@ -333,7 +339,7 @@ class Bartender(MenuDelegate):
                 self.drawText(self.lcd, 'Served in: ' + self.drink_list[menuItem.name]["drinkware"], textColor, (40, SCREEN_HEIGHT-50, 400, 50), DETAIL_FONT)
         elif (menuItem.type == "pump_selection"):
             self.drawText(self.lcd, self.drink_options[menuItem.name]["description"], WHITE, (40, 120, 400, 600), DETAIL_FONT)
-            self.drawText(self.lcd, 'Type: '+ self.drink_options[menuItem.name]["type"], WHITE, (40, SCREEN_HEIGHT-150, 400, 100), DETAIL_FONT)
+            self.drawText(self.lcd, 'Type: '+ self.drink_options[menuItem.name]["type"], WHITE, (40, SCREEN_HEIGHT-50, 400, 100), DETAIL_FONT)
         
         pygame.display.update()
 
@@ -383,7 +389,7 @@ class Bartender(MenuDelegate):
             pygame.display.update()
             time.sleep(interval)
 
-    def makeDrink(self, drink, ingredients):
+    def makeDrink(self, drink, ingredients, double=False):
         # cancel any button presses while the drink is being made
         self.stopInterrupts()
         self.running = True
@@ -398,7 +404,11 @@ class Bartender(MenuDelegate):
         for ing in ingredients.keys():
             for pump in self.pump_configuration.keys():
                 if ing == self.pump_configuration[pump]["value"]:
-                    waitTime = ingredients[ing] * FLOW_RATE
+                    if double:
+                        # TODO: Shouldn't a double only be twice the liquor and not the mixers?
+                        waitTime = ingredients[ing] * 2 * FLOW_RATE
+                    else:
+                        waitTime = ingredients[ing] * FLOW_RATE
                     if (waitTime > maxTime):
                         maxTime = waitTime
                     pump_t = threading.Thread(target=self.pour, args=(self.pump_configuration[pump]["pin"], waitTime))
@@ -433,18 +443,30 @@ class Bartender(MenuDelegate):
         self.running = False
 
     def btnPressed(self, ctx):
-        with uinput.UInput() as ui:
-            if (ctx == 17):
-                ui.write(e.EV_KEY, e.KEY_UP, 1)
-            elif (ctx == 22):
-                ui.write(e.EV_KEY, e.KEY_RIGHT, 1)
-            elif (ctx == 23):
-                ui.write(e.EV_KEY, e.KEY_DOWN, 1)
-            elif (ctx == 27):
-                ui.write(e.EV_KEY, e.KEY_LEFT, 1)
-            ui.syn()
+        if (ctx == 17):
+            if (GPIO.input(ctx)):
+                print("input")
+                keyboard.press(Key.up)
+            else:
+                print("no input")
+                keyboard.release(Key.up)
+        elif (ctx == 22):
+            if (GPIO.input(ctx)):
+                keyboard.press(Key.right)
+            else:
+                keyboard.release(Key.right)
+        elif (ctx == 23):
+            if (GPIO.input(ctx)):
+                keyboard.press(Key.down)
+            else:
+                keyboard.release(Key.down)
+        elif (ctx == 27):
+            if (GPIO.input(ctx)):
+                keyboard.press(Key.left)
+            else:
+                keyboard.release(Key.left)
 
-    def updateProgressBar(self, percent, x=15, y=15):
+    def updateProgressBar(self, percent, x=170, y=15):
         height = 20
         width = SCREEN_WIDTH - 2 * x
         for w in range(0, width):
@@ -460,29 +482,49 @@ class Bartender(MenuDelegate):
     def processInput(self):
         for event in pygame.event.get():
             if event.type == pygame.KEYDOWN:
+                print("keydown")
+                self.start_time = time.time()
+            if event.type == pygame.KEYUP:
+                self.hold_time = time.time() - self.start_time
                 if event.key == pygame.K_UP:
-                    BTN_STATE[0] = 1
+                    print(self.hold_time)
+                    if self.hold_time >= 2:
+                        BTN_STATE[0] = 2
+                    else:
+                        BTN_STATE[0] = 1
                     self.drawButtons()
                     time.sleep(0.2)
                     self.menuContext.prev()
                     BTN_STATE[0] = 0
                     self.drawButtons()
                 elif event.key == pygame.K_RIGHT:
-                    BTN_STATE[1] = 1
+                    print(self.hold_time)
+                    if self.hold_time >= 2:
+                        BTN_STATE[1] = 2
+                    else:
+                        BTN_STATE[1] = 1
                     self.drawButtons()
                     time.sleep(0.2)
                     self.menuContext.select()
                     BTN_STATE[1] = 0
                     self.drawButtons()
                 elif event.key == pygame.K_DOWN:
-                    BTN_STATE[2] = 1
+                    print(self.hold_time)
+                    if self.hold_time >= 2:
+                        BTN_STATE[2] = 2
+                    else:
+                        BTN_STATE[2] = 1
                     self.drawButtons()
                     time.sleep(0.2)
                     self.menuContext.next()
                     BTN_STATE[2] = 0
                     self.drawButtons()
                 elif event.key == pygame.K_LEFT:
-                    BTN_STATE[3] = 1
+                    print(self.hold_time)
+                    if self.hold_time >= 2:
+                        BTN_STATE[3] = 2
+                    else:
+                        BTN_STATE[3] = 1
                     self.drawButtons()
                     time.sleep(0.2)
                     self.menuContext.back()
