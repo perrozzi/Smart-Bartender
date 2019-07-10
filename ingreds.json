@@ -1,9 +1,9 @@
-[
+﻿[
 	{
 		"abv": 45,
 		"acid": 0,
 		"bitter": 100,
-		"sweet": 0,
+		"sweet": 4.2,
 		"description": "A bitters is traditionally an alcoholic preparation flavored with botanical matter so that the end result is characterized by a bitter, sour, or bittersweet flavor.",
 		"external": "https://en.wikipedia.org/wiki/Bitters",
 		"similar": [ "BittersAromatic", "BittersChocolate", "BittersOrange" ], 
@@ -16,7 +16,7 @@
 		"abv": 45,
 		"acid": 0,
 		"bitter": 100,
-		"sweet": 0,
+		"sweet": 4.2,
 		"description": "Angostura bitters is a concentrated bitters (herbal alcoholic preparation) based on gentian, herbs and spices, by House of Angostura in Trinidad and Tobago.",
 		"external": "https://en.wikipedia.org/wiki/Angostura_bitters",
 		"related": "Bitters",
@@ -26,8 +26,8 @@
 		"value": "BittersAromatic"
 	},
 	{
-		"abv": 28,
-		"acid": 30,
+		"abv": 24,
+		"acid": 0,
 		"bitter": 80,
 		"sweet": 24,
 		"description": "Campari is an alcoholic liqueur, considered an apéritif, obtained from the infusion of herbs and fruit in alcohol and water. It is a bitters, characterized by its dark red color.",
@@ -161,9 +161,9 @@
 	},
 	{
 		"abv": 0,
-		"acid": 45,
+		"acid": 0.8,
 		"bitter": 0,
-		"sweet": 12,
+		"sweet": 12.4,
 		"description": "",
 		"type": "mixer",
 		"name": "Orange Juice",
@@ -171,9 +171,9 @@
 	},
 	{
 		"abv": 0,
-		"acid": 56,
+		"acid": 3.6,
 		"bitter": 0,
-		"sweet": 11,
+		"sweet": 13.3,
 		"description": "",
 		"type": "mixer",
 		"name": "Cranberry Juice",
@@ -181,7 +181,7 @@
 	},
 	{
 		"abv": 0,
-		"acid": 47,
+		"acid": 2.4,
 		"bitter": 0,
 		"sweet": 14,
 		"description": "",
@@ -191,7 +191,7 @@
 	},
 	{
 		"abv": 0,
-		"acid": 44,
+		"acid": 0.93,
 		"bitter": 0,
 		"sweet": 13,
 		"description": "",
@@ -201,9 +201,19 @@
 	},
 	{
 		"abv": 0,
-		"acid": 47,
+		"acid": 0.5,
 		"bitter": 0,
-		"sweet": 10,
+		"sweet": 18,
+		"description": "",
+		"type": "mixer",
+		"name": "Grape Juice",
+		"value": "JuiceGrape"
+	},
+	{
+		"abv": 0,
+		"acid": 2.4,
+		"bitter": 0,
+		"sweet": 10.4,
 		"description": "",
 		"type": "mixer",
 		"name": "Grapefruit Juice",
@@ -211,7 +221,7 @@
 	},
 	{
 		"abv": 0,
-		"acid": 16,
+		"acid": 1.6,
 		"bitter": 0,
 		"sweet": 6,
 		"description": "",
@@ -221,9 +231,9 @@
 	},
 	{
 		"abv": 0,
-		"acid": 61,
+		"acid": 6,
 		"bitter": 0,
-		"sweet": 10,
+		"sweet": 1.6,
 		"description": "",
 		"type": "mixer",
 		"name": "Lime Juice",
@@ -231,9 +241,9 @@
 	},
 	{
 		"abv": 0,
-		"acid": 57,
+		"acid": 6,
 		"bitter": 0,
-		"sweet": 9,
+		"sweet": 1.6,
 		"description": "",
 		"type": "mixer",
 		"name": "Lemon Juice",
@@ -241,19 +251,19 @@
 	},
 	{
 		"abv": 28,
-		"acid": 15,
+		"acid": 0,
 		"bitter": 0,
-		"sweet": 30,
+		"sweet": 16,
 		"description": "Amaretto (Italian for 'a little bitter') is a sweet Italian liqueur that originated in Saronno, Italy. While originally flavored from bitter almonds, various modern commercial brands are prepared from a base of apricot stones, peach stones, or almonds, all of which are natural sources of the benzaldehyde that provides the principal almond-like flavor of the liqueur.",
 		"type": "spirit",
 		"name": "Almond Liqueur (Amaretto)",
 		"value": "LiqueurAlmond"
 	},
 	{
-		"abv": 20,
-		"acid": 15,
+		"abv": 24,
+		"acid": 0,
 		"bitter": 0,
-		"sweet": 33,
+		"sweet": 39.5,
 		"description": "Crème de Cacao is a sweet alcoholic (chocolate bean) flavored liqueur, often scented with a hint of vanilla. It is similar to chocolate liqueur, which is usually sweeter and more syrupy.",
 		"type": "spirit",
 		"name": "Chocolate Liqueur (Crème de Cacao)",
@@ -261,7 +271,7 @@
 	},
 	{
 		"abv": 20,
-		"acid": 35,
+		"acid": 0,
 		"bitter": 0,
 		"sweet": 49,
 		"description": "",
@@ -271,7 +281,7 @@
 	},
 	{
 		"abv": 17,
-		"acid": 15,
+		"acid": 0,
 		"bitter": 0,
 		"sweet": 20,
 		"description": "Baileys Irish Cream is an Irish whiskey and cream-based liqueur, made by Diageo at Nangor Road, in Dublin, Ireland.",
@@ -281,7 +291,7 @@
 	},
 	{
 		"abv": 20,
-		"acid": 15,
+		"acid": 0,
 		"bitter": 0,
 		"sweet": 37,
 		"description": "Midori is a melon-flavored liqueur that has a beautiful green color and is used in many popular cocktails that are easy and fun to mix up.",
@@ -291,9 +301,9 @@
 	},
 	{
 		"abv": 40,
-		"acid": 15,
+		"acid": 0,
 		"bitter": 0,
-		"sweet": 36,
+		"sweet": 25,
 		"description": "",
 		"similar": "LiqueurOrange2",
 		"type": "spirit",
@@ -302,7 +312,7 @@
 	},
 	{
 		"abv": 40,
-		"acid": 15,
+		"acid": 0,
 		"bitter": 0,
 		"sweet": 17,
 		"description": "",
@@ -313,7 +323,7 @@
 	},
 	{
 		"abv": 0,
-		"acid": 14,
+		"acid": 0,
 		"bitter": 0,
 		"sweet": 5,
 		"description": "",
@@ -323,7 +333,7 @@
 	},
 	{
 		"abv": 0,
-		"acid": 15,
+		"acid": 0,
 		"bitter": 0,
 		"sweet": 3.3,
 		"description": "",
@@ -344,7 +354,7 @@
 	},
 	{
 		"abv": 21,
-		"acid": 15,
+		"acid": 0,
 		"bitter": 0,
 		"sweet": 22,
 		"description": "",
@@ -379,7 +389,7 @@
 	},
 	{
 		"abv": 23,
-		"acid": 15,
+		"acid": 0,
 		"bitter": 0,
 		"sweet": 22,
 		"description": "",
@@ -389,7 +399,7 @@
 	},
 	{
 		"abv": 23,
-		"acid": 15,
+		"acid": 0,
 		"bitter": 0,
 		"sweet": 40,
 		"description": "",
@@ -399,7 +409,7 @@
 	},
 	{
 		"abv": 0,
-		"acid": 55,
+		"acid": 1.76,
 		"bitter": 0,
 		"sweet": 11,
 		"description": "",
@@ -409,7 +419,7 @@
 	},
 	{
 		"abv": 0,
-		"acid": 52,
+		"acid": 1.76,
 		"bitter": 0,
 		"sweet": 9,
 		"description": "",
@@ -419,8 +429,8 @@
 	},
 	{
 		"abv": 0,
-		"acid": 55,
-		"bitter": 0,
+		"acid": 1.76,
+		"bitter": 20,
 		"sweet": 9,
 		"description": "",
 		"related": "SodaWater",
@@ -430,7 +440,7 @@
 	},
 	{
 		"abv": 0,
-		"acid": 45,
+		"acid": 1.76,
 		"bitter": 0,
 		"sweet": 0,
 		"description": "",
@@ -441,7 +451,7 @@
 	},
 	{
 		"abv": 0,
-		"acid": 57,
+		"acid": 0,
 		"bitter": 0,
 		"sweet": 47,
 		"description": "",
@@ -451,7 +461,7 @@
 	},
 	{
 		"abv": 0,
-		"acid": 40,
+		"acid": 0,
 		"bitter": 0,
 		"sweet": 50,
 		"description": "A 1:1 (sucrose) sugar syrup made by measuring by volume",
@@ -461,7 +471,7 @@
 	},
 	{
 		"abv": 0,
-		"acid": 40,
+		"acid": 0,
 		"bitter": 0,
 		"sweet": 66,
 		"description": "A 2:1 (sucrose) sugar syrup made by measuring by volume",
@@ -503,10 +513,10 @@
 		"value": "TequilaAged"
 	},
 	{
-		"abv": 18,
-		"acid": 15,
+		"abv": 16.5,
+		"acid": 0.6,
 		"bitter": 0,
-		"sweet": 1,
+		"sweet": 16,
 		"description": "",
 		"related": "VermouthSweet",
 		"type": "spirit",
@@ -514,10 +524,10 @@
 		"value": "VermouthDry"
 	},
 	{
-		"abv": 18,
-		"acid": 15,
+		"abv": 17.5,
+		"acid": 0.6,
 		"bitter": 0,
-		"sweet": 7,
+		"sweet": 3,
 		"description": "",
 		"related": "VermouthDry",
 		"type": "spirit",
@@ -570,6 +580,9 @@
 	},
 	{
 		"abv": "40",
+		"acid": 0,
+		"bitter": 0,
+		"sweet": 0,
 		"description": "",
 		"related": "Vodka",
 		"type": "spirit",
@@ -657,7 +670,7 @@
 	},
 	{
 		"abv": 20,
-		"acid": 47,
+		"acid": 0.6,
 		"bitter": 0,
 		"sweet": 2,
 		"description": "",
@@ -668,7 +681,7 @@
 	},
 	{
 		"abv": 16,
-		"acid": 47,
+		"acid": 0.6,
 		"bitter": 0,
 		"sweet": 1,
 		"description": "",
@@ -679,7 +692,7 @@
 	},
 	{
 		"abv": 12,
-		"acid": 47,
+		"acid": 1,
 		"bitter": 0,
 		"sweet": 1,
 		"description": "",
@@ -690,7 +703,7 @@
 	},
 	{
 		"abv": 16,
-		"acid": 47,
+		"acid": 0.6,
 		"bitter": 0,
 		"sweet": 1,
 		"description": "",

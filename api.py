@@ -233,8 +233,8 @@ def calcDrinkCharacter(drink_val):
                 sweet = sweet + (ingred[0]['sweet'] * volume)
                 bitter = bitter + (ingred[0]['bitter'] * volume)
     abv = (alcohol / tot_vol) * 100
-    balance = (sweet - acid)
-    bitter = (bitter - sweet - acid)
+    balance = (sweet - acid * 10)
+    bitter = (bitter - sweet - acid * 10)
     if (abv >= 20):
         character.append("boozy")
     if (balance < -20):
@@ -245,8 +245,7 @@ def calcDrinkCharacter(drink_val):
         character.append("balanced")
     if (bitter >= 20):
         character.append("bitter")
-    print alcohol, acid, sweet, bitter, tot_vol, abv, balance, character
-    return jsonify({'character': character})
+    return jsonify({'character': character, 'alcohol': alcohol, 'abv': abv, 'acid': acid, 'sweet': sweet, 'bitter': bitter, 'balance': balance, 'tot_vol': tot_vol})
 
 @app.route("/ingreds")
 def listIngreds():
