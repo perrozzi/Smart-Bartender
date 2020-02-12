@@ -23,10 +23,12 @@ SCREEN_WIDTH = 128
 SCREEN_HEIGHT = 64
 
 LEFT_BTN_PIN = 13
-LEFT_PIN_BOUNCE = 200
+# LEFT_PIN_BOUNCE = 200
+LEFT_PIN_BOUNCE = 1000
 
 RIGHT_BTN_PIN = 5
-RIGHT_PIN_BOUNCE = 600
+# RIGHT_PIN_BOUNCE = 600
+RIGHT_PIN_BOUNCE = 2000
 
 FLOW_RATE = 60.0/100.0
 
@@ -69,7 +71,7 @@ class Bartender(MenuDelegate):
 
     def startInterrupts(self):
         self.running = True
-        GPIO.add_event_detect(self.btn1Pin, GPIO.FALLING, callback=self.left_btn, bouncetime=LEFT_PIN_BOUNCE) 
+        GPIO.add_event_detect(self.btn1Pin, GPIO.FALLING, callback=self.left_btn, bouncetime=LEFT_PIN_BOUNCE)
         time.sleep(1)
         GPIO.add_event_detect(self.btn2Pin, GPIO.FALLING, callback=self.right_btn, bouncetime=RIGHT_PIN_BOUNCE)
         time.sleep(1)
