@@ -12,10 +12,10 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setwarnings(False)
 RUNNING = False
 
-drink_list = json.load(open('/home/pi/Smart-Bartender/drinks.json'))
-ingred_list = json.load(open('/home/pi/Smart-Bartender/ingreds.json'))
-pump_list = json.load(open('/home/pi/Smart-Bartender/pumps.json'))
-settings = json.load(open('/home/pi/Smart-Bartender/settings.json'))
+drink_list = json.load(open('/home/pi/Downloads/Smart-Bartender/drinks.json'))
+ingred_list = json.load(open('/home/pi/Downloads/Smart-Bartender/ingreds.json'))
+pump_list = json.load(open('/home/pi/Downloads/Smart-Bartender/pumps.json'))
+settings = json.load(open('/home/pi/Downloads/Smart-Bartender/settings.json'))
 
 for pumps in pump_list:
     GPIO.setup(pumps['value'], GPIO.OUT, initial=GPIO.HIGH)
@@ -286,7 +286,7 @@ def updatePump(pump_val):
     if 'description' in request.json and type(request.json['description']) != unicode:
         abort(400)
     pump[0]['description'] = request.json.get('description', pump[0]['description'])
-    json.dump(pump_list, open('/home/pi/Smart-Bartender/pump_config.json', 'w'))
+    json.dump(pump_list, open('/home/pi/Downloads/Smart-Bartender/pump_config.json', 'w'))
     return jsonify([pump[0]])
 
 @app.route('/pin/<int:pin>/<int:waitTime>', methods=['GET'])
