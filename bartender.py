@@ -72,7 +72,7 @@ class Bartender(MenuDelegate):
     def startInterrupts(self):
         self.running = True
         GPIO.add_event_detect(self.btn1Pin, GPIO.FALLING, callback=self.left_btn, bouncetime=LEFT_PIN_BOUNCE)
-        time.sleep(1)
+        time.sleep(1) # added to prevent crashes
         GPIO.add_event_detect(self.btn2Pin, GPIO.FALLING, callback=self.right_btn, bouncetime=RIGHT_PIN_BOUNCE)
         time.sleep(1)
         self.running = False
