@@ -1,3 +1,7 @@
+# Known issues:
+- crash when pushing the right button a lot of times after pouring a drink
+https://sourceforge.net/p/raspberry-gpio-python/wiki/Inputs/
+
 # Smart Bartender - Remix by Danzibob (Originally by HackerShack)
 Cutting the threading and neo-pixel, and using an I2C OLED display to make this project just a little simpler
 
