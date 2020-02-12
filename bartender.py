@@ -31,7 +31,6 @@ RIGHT_PIN_BOUNCE = 2000
 FLOW_RATE = 60.0/100.0
 
 class Bartender(MenuDelegate): 
-    
     def __init__(self):
         self.running = False
 
